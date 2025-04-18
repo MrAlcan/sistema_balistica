@@ -13,6 +13,7 @@ class Usuario(db.Model):
     correo = db.Column(db.String(40), nullable=True)
     rol = db.Column(db.String(20))
     grado = db.Column(db.String(50))
+    user_img = db.Column(db.Text, nullable=True, default=None)
     activo = db.Column(db.Integer, default=1)
 
     id_usuario_creado = db.Column(db.Integer, nullable=False)

@@ -129,5 +129,27 @@ class ServiciosUsuario():
         respuesta = SerializadorUniversal.serializar_lista(usuarios, datos_requeridos)
 
         return respuesta
+    
+    def obtener_por_id(id_usuario):
+        usuario = Usuario.query.get(id_usuario)
+
+        datos_requeridos = ['id_usuario', 'nombre_usuario', 'nombres', 'apellidos', 'carnet', 'correo', 'rol', 'grado', 'activo', 'user_img']
+        
+        respuesta = SerializadorUniversal.serializar_unico(usuario, datos_requeridos)
+
+        if not respuesta['user_img']:
+            respuesta['user_img'] = '/dist/img/user2-160x160.jpg'
+
+        return respuesta
+    
+    def subir_imagen(id_usuario, direccion):
+        usuario = Usuario.query.get(id_usuario)
+        if not usuario:
+            return None
+        
+        usuario.user_img = direccion
+        db.session.commit()
+
+        return True
 
         

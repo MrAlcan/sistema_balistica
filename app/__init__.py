@@ -41,6 +41,10 @@ def create_app(config_class=Config):
     from app.routes.actividad import actividad_bp
     from app.routes.configuracion import crear_blueprint'''
 
+    from app.routes.inicio import inicio_bp
+    from app.routes.administrador import administrador_bp
+    from app.routes.perfil import perfil_bp
+
     '''@app.before_request
     def verificar_cookie():
         if not request.cookies.get('access_token'):
@@ -54,6 +58,10 @@ def create_app(config_class=Config):
         #print(direccion)
         return redirect(url_for('inicio_bp.vista_ingresar'))
         return redirect(url_for('pagina_no_encontrada'))
+    
+    app.register_blueprint(inicio_bp, url_prefix='/inicio')
+    app.register_blueprint(administrador_bp, url_prefix='/administrador')
+    app.register_blueprint(perfil_bp, url_prefix='/administrador/perfil')
     
     '''perfil_administrador_bp = crear_blueprint('administrador_perfil')
     perfil_recepcionista_bp = crear_blueprint('recepcionista_perfil')
