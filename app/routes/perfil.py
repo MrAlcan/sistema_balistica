@@ -36,119 +36,123 @@ def convert_to_jpg(image):
         return img
     return image
 
-
-perfil_bp = Blueprint('perfil_bp', __name__)
-
-
-@perfil_bp.route('/configurar', methods=['POST'])
-@token_requerido
-def configurar_perfil(datos_usuario):
-
-    id_usuario = datos_usuario['id_usuario']
-
-    datos = request.form
-
-    nombres = datos['nombres']
-    apellidos = datos['apellidos']
-    correo = datos['correo']
+def crear_blueprint(nombre_blueprint):
+    bp = Blueprint(nombre_blueprint, __name__)
 
 
-    respuesta = ServiciosUsuario.modificar(id_usuario=id_usuario,
-                                           id_usuario_modificado=id_usuario,
-                                           nombres=nombres,
-                                           apellidos=apellidos,
-                                           correo=correo)
+    @bp.route('/configurar', methods=['POST'])
+    @token_requerido
+    def configurar_perfil(datos_usuario):
 
+        id_usuario = datos_usuario['id_usuario']
+
+        datos = request.form
+
+        nombres = datos['nombres']
+        apellidos = datos['apellidos']
+        correo = datos['correo']
+
+
+        respuesta = ServiciosUsuario.modificar(id_usuario=id_usuario,
+                                            id_usuario_modificado=id_usuario,
+                                            nombres=nombres,
+                                            apellidos=apellidos,
+                                            correo=correo)
+
+        
+
+        referer = request.referrer
+
+        if 'image' not in request.files:
+            if referer:
+                return redirect(referer)
+            else:
+                # Si no hay referencia, rediriges a una página predeterminada
+                return redirect(url_for('inicio_bp.vista_ingresar'))
+
+        file = request.files['image']
+        
+        # Verificar si se seleccionó un archivo
+        if file.filename == '':
+            if referer:
+                return redirect(referer)
+            else:
+                # Si no hay referencia, rediriges a una página predeterminada
+                return redirect(url_for('inicio_bp.vista_ingresar'))
+
+        # Verificar si el archivo tiene una extensión permitida
+        if file and allowed_file(file.filename):
+            # Renombrar el archivo usando el id de sesión y la fecha actual para evitar colisiones
+            session_id = str(id_usuario)  # Aquí se debe usar el ID de sesión o cualquier identificador único
+            timestamp = time.strftime("%Y%m%d_%H%M%S")
+            filename = f"{session_id}_{timestamp}.jpg"
+
+            # Asegurarse de que el nombre del archivo sea seguro
+            filename = secure_filename(filename)
+
+            # Crear el directorio si no existe
+            if not os.path.exists(current_app.config['UPLOAD_FOLDER_PERFIL']):
+                os.makedirs(current_app.config['UPLOAD_FOLDER_PERFIL'])
+
+            # Guardar la imagen temporalmente
+            file_path = os.path.join(current_app.config['UPLOAD_FOLDER_PERFIL'], filename)
+
+            # Abrir la imagen con Pillow
+            image = Image.open(file)
+
+            # Redimensionar y convertir la imagen
+            image = resize_image(image)
+            image = convert_to_jpg(image)
+
+            # Guardar la imagen final en el directorio
+            image.save(file_path, 'JPEG')
+
+            # Devolver la URL de la imagen guardada
+            imagen_url = f'/perfil/{filename}'
+
+            sub_img = ServiciosUsuario.subir_imagen(id_usuario, imagen_url)
+
+
+
+            if referer:
+                return redirect(referer)
+            else:
+                # Si no hay referencia, rediriges a una página predeterminada
+                return redirect(url_for('inicio_bp.vista_ingresar'))
+
+        if referer:
+            return redirect(referer)
+        else:
+            # Si no hay referencia, rediriges a una página predeterminada
+            return redirect(url_for('inicio_bp.vista_ingresar'))
+
+
+        if referer:
+            return redirect(referer)
+        else:
+            # Si no hay referencia, rediriges a una página predeterminada
+            return redirect(url_for('inicio_bp.vista_ingresar'))
+
+    @bp.route('/contrasena', methods=['POST'])
+    @token_requerido
+    def configurar_contrasena(datos_usuario):
+        id_usuario = datos_usuario['id_usuario']
+
+        datos = request.form
+
+        contrasena_ant = datos['contrasena_ant']
+        contrasena_nueva = datos['contrasena_nueva']
+        print(datos)
+
+        respuesta = ServiciosUsuario.modificar_contrasena(id_usuario, contrasena_ant, contrasena_nueva)
+        print(respuesta)
+        referer = request.referrer
+
+        if referer:
+            return redirect(referer)
+        else:
+            # Si no hay referencia, rediriges a una página predeterminada
+            return redirect(url_for('inicio_bp.vista_ingresar'))
     
 
-    referer = request.referrer
-
-    if 'image' not in request.files:
-        if referer:
-            return redirect(referer)
-        else:
-            # Si no hay referencia, rediriges a una página predeterminada
-            return redirect(url_for('inicio_bp.vista_ingresar'))
-
-    file = request.files['image']
-    
-    # Verificar si se seleccionó un archivo
-    if file.filename == '':
-        if referer:
-            return redirect(referer)
-        else:
-            # Si no hay referencia, rediriges a una página predeterminada
-            return redirect(url_for('inicio_bp.vista_ingresar'))
-
-    # Verificar si el archivo tiene una extensión permitida
-    if file and allowed_file(file.filename):
-        # Renombrar el archivo usando el id de sesión y la fecha actual para evitar colisiones
-        session_id = str(id_usuario)  # Aquí se debe usar el ID de sesión o cualquier identificador único
-        timestamp = time.strftime("%Y%m%d_%H%M%S")
-        filename = f"{session_id}_{timestamp}.jpg"
-
-        # Asegurarse de que el nombre del archivo sea seguro
-        filename = secure_filename(filename)
-
-        # Crear el directorio si no existe
-        if not os.path.exists(current_app.config['UPLOAD_FOLDER_PERFIL']):
-            os.makedirs(current_app.config['UPLOAD_FOLDER_PERFIL'])
-
-        # Guardar la imagen temporalmente
-        file_path = os.path.join(current_app.config['UPLOAD_FOLDER_PERFIL'], filename)
-
-        # Abrir la imagen con Pillow
-        image = Image.open(file)
-
-        # Redimensionar y convertir la imagen
-        image = resize_image(image)
-        image = convert_to_jpg(image)
-
-        # Guardar la imagen final en el directorio
-        image.save(file_path, 'JPEG')
-
-        # Devolver la URL de la imagen guardada
-        imagen_url = f'/perfil/{filename}'
-
-        sub_img = ServiciosUsuario.subir_imagen(id_usuario, imagen_url)
-
-
-
-        if referer:
-            return redirect(referer)
-        else:
-            # Si no hay referencia, rediriges a una página predeterminada
-            return redirect(url_for('inicio_bp.vista_ingresar'))
-
-    if referer:
-        return redirect(referer)
-    else:
-        # Si no hay referencia, rediriges a una página predeterminada
-        return redirect(url_for('inicio_bp.vista_ingresar'))
-
-
-    if referer:
-        return redirect(referer)
-    else:
-        # Si no hay referencia, rediriges a una página predeterminada
-        return redirect(url_for('inicio_bp.vista_ingresar'))
-
-@perfil_bp.route('/contrasena', methods=['POST'])
-@token_requerido
-def configurar_contrasena(datos_usuario):
-    id_usuario = datos_usuario['id_usuario']
-
-    datos = request.form
-
-    contrasena_ant = datos['contrasena_ant']
-    contrasena_nueva = datos['contrasena_nueva']
-
-    ServiciosUsuario.modificar_contrasena(id_usuario, contrasena_ant, contrasena_nueva)
-
-    referer = request.referrer
-
-    if referer:
-        return redirect(referer)
-    else:
-        # Si no hay referencia, rediriges a una página predeterminada
-        return redirect(url_for('inicio_bp.vista_ingresar'))
+    return bp

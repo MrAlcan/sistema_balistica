@@ -2,5 +2,5 @@
 .env
 **/__pycache__/
 separador_datos.py
-app/static/clases/
+app/static/perfil/
 app/static/tareas/

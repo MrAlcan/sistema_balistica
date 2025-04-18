@@ -74,23 +74,27 @@ class ServiciosUsuario():
         else:
             return {'status': 'contrasena erronea'}
     
-    def eliminar(id_usuario):
+    def eliminar(id_usuario, id_usuario_modifico):
         usuario = Usuario.query.filter(Usuario.activo==1, Usuario.id_usuario == id_usuario).first()
 
         if not usuario:
             return {'error': 'usuario no encontrado'}
         
         usuario.activo = 0
+        usuario.id_usuario_modificado = id_usuario_modifico
+        usuario.fecha_modificado = datetime.now()
         db.session.commit()
         return {'status': 'success'}
 
-    def habilitar(id_usuario):
+    def habilitar(id_usuario, id_usuario_modifico):
         usuario = Usuario.query.filter(Usuario.activo==0, Usuario.id_usuario == id_usuario).first()
 
         if not usuario:
             return {'error': 'usuario no encontrado'}
         
         usuario.activo = 1
+        usuario.id_usuario_modificado = id_usuario_modifico
+        usuario.fecha_modificado = datetime.now()
         db.session.commit()
         return {'status': 'success'}
     
