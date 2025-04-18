@@ -1,0 +1,273 @@
+{% extends 'administrador/plantilla.html' %}
+
+{% block cabecera %}
+<!-- DataTables -->
+<link rel="stylesheet"
+    href="{{url_for('static', filename='/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
+<link rel="stylesheet"
+    href="{{url_for('static', filename='/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
+<link rel="stylesheet"
+    href="{{url_for('static', filename='/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
+{% endblock %}
+
+{% block titulo_contenido %}
+Casos
+{% endblock %}
+
+{% block direccion_contenido %}
+<li class="breadcrumb-item active">Casos</li>
+<!--li class="breadcrumb-item active">Totales</li-->
+{% endblock %}
+
+
+{% block contenido %}
+<div class="container-fluid">
+
+    <div class="modal fade" id="modal-agregar-caso">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Agregar Caso</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/administrador/casos/agregar" method="POST" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">RUP</label>
+                                <input type="text" class="form-control" name="rup"
+                                    placeholder="Ingresa el RUP" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Descripción</label>
+                                <input type="text" class="form-control" name="descripcion"
+                                    placeholder="Ingresa la descripción" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Departamento</label>
+                                <select class="form-control" name="departamento" required>
+                                    <option value="La Paz" selected>La Paz</option>
+                                    <option value="Santa Cruz">Santa Cruz</option>
+                                    <option value="Cochabamba">Cochabamba</option>
+                                    <option value="Oruro">Oruro</option>
+                                    <option value="Pando">Pando</option>
+                                    <option value="Beni">Beni</option>
+                                    <option value="Tarija">Tarija</option>
+                                    <option value="Chuquisaca">Chuquisaca</option>
+                                    <option value="Potosi">Potosi</option>
+                                </select>
+                            </div>
+                            
+
+                            
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Perito Asignado</label>
+                                <select class="form-control" name="perito" required>
+                                    <option selected>Selcciona un Perito</option>
+                                    {% if peritos %}
+                                        {% for perito in peritos %}
+                                            <option value="{{perito.id_usuario}}">{{perito.nombres}} {{perito.apellidos}}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-success">Agregar Caso</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <!--button type="button" class="btn btn-primary">Save changes</button-->
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    {% if casos %}
+        {% for caso in casos %}
+    
+            <div class="modal fade" id="modal-editar-caso-{{caso.id_caso}}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Editar Caso</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/administrador/casos/editar/{{caso.id_caso}}" method="POST" enctype="multipart/form-data">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">RUP</label>
+                                        <input type="text" class="form-control" name="rup"
+                                            placeholder="Ingresa el RUP" value="{{caso.rup}}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Descripción</label>
+                                        <input type="text" class="form-control" name="descripcion"
+                                            placeholder="Ingresa la descripción" value="{{caso.descripcion}}" required>
+                                    </div>
+        
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Departamento</label>
+                                        <select class="form-control" name="departamento" required>
+                                            <option value="La Paz" {% if caso.departamento == 'La Paz' %}selected{% endif %}>La Paz</option>
+                                            <option value="Santa Cruz" {% if caso.departamento == 'Santa Cruz' %}selected{% endif %}>Santa Cruz</option>
+                                            <option value="Cochabamba" {% if caso.departamento == 'Cochabamba' %}selected{% endif %}>Cochabamba</option>
+                                            <option value="Oruro" {% if caso.departamento == 'Oruro' %}selected{% endif %}>Oruro</option>
+                                            <option value="Pando" {% if caso.departamento == 'Pando' %}selected{% endif %}>Pando</option>
+                                            <option value="Beni" {% if caso.departamento == 'Beni' %}selected{% endif %}>Beni</option>
+                                            <option value="Tarija" {% if caso.departamento == 'Tarija' %}selected{% endif %}>Tarija</option>
+                                            <option value="Chuquisaca" {% if caso.departamento == 'Chuquisaca' %}selected{% endif %}>Chuquisaca</option>
+                                            <option value="Potosi" {% if caso.departamento == 'Potosi' %}selected{% endif %}>Potosi</option>
+                                        </select>
+                                    </div>
+                                    
+        
+                                    
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Perito Asignado</label>
+                                        <select class="form-control" name="perito" required>
+                                            {% if peritos %}
+                                                {% for perito in peritos %}
+                                                    <option value="{{perito.id_usuario}}" {% if caso.id_experto == perito.id_usuario %}selected{% endif %}>{{perito.nombres}} {{perito.apellidos}}</option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                            <!--button type="button" class="btn btn-primary">Save changes</button-->
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
+    <div class="row">
+        <div class="col-12">
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Casos Registrados en el Sistema</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="row">
+                        <button class="btn btn-success" data-toggle="modal"
+                        data-target="#modal-agregar-caso">Agregar Caso <i class="fa fa-plus"></i></button>
+                    </div>
+                    <br />
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>RUP</th>
+                                <th>Descripción</th>
+                                <th>Departamento</th>
+                                <th>Perito</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if casos %}
+                                {% for caso in casos %}
+                                    <tr>
+                                        <td>{{caso.id_caso}}</td>
+                                        <td>{{caso.rup}}</td>
+                                        <td>{{caso.descripcion}}</td>
+                                        <td>{{caso.departamento}}</td>
+                                        <td>{{caso.perito}}</td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-editar-caso-{{caso.id_caso}}">Editar Caso <i class="fa fa-edit"></i></button>
+                                            <br />
+                                            <a href="/administrador/casos/eliminar/{{caso.id_caso}}"><button class="btn btn-danger btn-sm">Eliminar Caso <i class="fa fa-trash"></i></button></a>
+                                            <br />
+                                            <a href="/administrador/casos/ver/{{caso.id_caso}}"><button class="btn btn-primary btn-sm">Ver Caso <i class="fa fa-eye"></i></button></a>
+                                            
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                            
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>RUP</th>
+                                <th>Descripción</th>
+                                <th>Departamento</th>
+                                <th>Perito</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts_final %}
+<!-- DataTables  & Plugins -->
+<script src="{{url_for('static', filename='/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/datatables-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/datatables-buttons/js/buttons.bootstrap4.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/jszip/jszip.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/pdfmake/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/pdfmake/vfs_fonts.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
+<script>
+    $(function () {
+      $("#example1").DataTable({
+        "responsive": true, "lengthChange": false, "autoWidth": false,
+        "buttons": [/*"copy", "csv", "excel", "pdf", "print", */"colvis"]
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+      $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+      });
+    });
+</script>
+<script>
+    const nav_principal = document.getElementById('nav_casos')
+
+    nav_principal.classList.add('active')
+
+</script>
+{% endblock %}
