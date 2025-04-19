@@ -1,5 +1,6 @@
 from app.models.caso import Caso
 from app.models.usuario import Usuario
+from app.models.casquillo import Casquillo
 from app.config.extensiones import db
 from app.serializer.serializadorUniversal import SerializadorUniversal
 from datetime import datetime
@@ -86,5 +87,18 @@ class ServiciosCaso():
         
         datos_requeridos = ['id_caso', 'descripcion', 'departamento', 'rup', 'id_experto']
         respuesta = SerializadorUniversal.serializar_lista(casos, datos_requeridos)
+
+        for caso in respuesta:
+            casquillos_dir = []
+
+            casquillos = Casquillo.query.filter(Casquillo.activo==1, Casquillo.id_caso==caso['id_caso']).all()
+            if casquillos:
+                for casquillo in casquillos:
+                    diccionario = {'id_casquillo': int(casquillo.id_casquillo),
+                                   'direccion_imagen': str(casquillo.imagen_original)}
+                    casquillos_dir.append(diccionario)
+            
+            caso['casquillos'] = casquillos_dir
+
         return respuesta
 

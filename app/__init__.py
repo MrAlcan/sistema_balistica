@@ -43,6 +43,7 @@ def create_app(config_class=Config):
 
     from app.routes.inicio import inicio_bp
     from app.routes.administrador import administrador_bp
+    from app.routes.perito import perito_bp
     from app.routes.perfil import crear_blueprint
 
     '''@app.before_request
@@ -64,6 +65,7 @@ def create_app(config_class=Config):
     
     app.register_blueprint(inicio_bp, url_prefix='/inicio')
     app.register_blueprint(administrador_bp, url_prefix='/administrador')
+    app.register_blueprint(perito_bp, url_prefix='/perito')
     app.register_blueprint(administrador_perfil_bp, url_prefix='/administrador/perfil')
     app.register_blueprint(perito_perfil_bp, url_prefix='/perito/perfil')
     

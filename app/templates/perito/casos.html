@@ -1,0 +1,518 @@
+{% extends 'perito/plantilla.html' %}
+
+{% block cabecera %}
+<!-- DataTables -->
+<link rel="stylesheet"
+    href="{{url_for('static', filename='/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
+<link rel="stylesheet"
+    href="{{url_for('static', filename='/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
+<link rel="stylesheet"
+    href="{{url_for('static', filename='/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
+{% endblock %}
+
+{% block titulo_contenido %}
+Casos
+{% endblock %}
+
+{% block direccion_contenido %}
+<li class="breadcrumb-item active">Casos</li>
+<!--li class="breadcrumb-item active">Totales</li-->
+{% endblock %}
+
+
+{% block contenido %}
+<div class="container-fluid">
+
+    <div class="modal fade" id="modal-agregar-caso">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Agregar Caso</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/perito/casos/agregar" method="POST" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">RUP</label>
+                                <input type="text" class="form-control" name="rup" placeholder="Ingresa el RUP"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Descripción</label>
+                                <input type="text" class="form-control" name="descripcion"
+                                    placeholder="Ingresa la descripción" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Departamento</label>
+                                <select class="form-control" name="departamento" required>
+                                    <option value="La Paz" selected>La Paz</option>
+                                    <option value="Santa Cruz">Santa Cruz</option>
+                                    <option value="Cochabamba">Cochabamba</option>
+                                    <option value="Oruro">Oruro</option>
+                                    <option value="Pando">Pando</option>
+                                    <option value="Beni">Beni</option>
+                                    <option value="Tarija">Tarija</option>
+                                    <option value="Chuquisaca">Chuquisaca</option>
+                                    <option value="Potosi">Potosi</option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <!-- /.card-body -->
+
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-success">Agregar Caso</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <!--button type="button" class="btn btn-primary">Save changes</button-->
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    {% if casos %}
+    {% for caso in casos %}
+
+    <div class="modal fade" id="modal-editar-caso-{{caso.id_caso}}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Editar Caso</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/perito/casos/editar/{{caso.id_caso}}" method="POST" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">RUP</label>
+                                <input type="text" class="form-control" name="rup" placeholder="Ingresa el RUP"
+                                    value="{{caso.rup}}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Descripción</label>
+                                <input type="text" class="form-control" name="descripcion"
+                                    placeholder="Ingresa la descripción" value="{{caso.descripcion}}" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Departamento</label>
+                                <select class="form-control" name="departamento" required>
+                                    <option value="La Paz" {% if caso.departamento=='La Paz' %}selected{% endif %}>La
+                                        Paz</option>
+                                    <option value="Santa Cruz" {% if caso.departamento=='Santa Cruz' %}selected{% endif
+                                        %}>Santa Cruz</option>
+                                    <option value="Cochabamba" {% if caso.departamento=='Cochabamba' %}selected{% endif
+                                        %}>Cochabamba</option>
+                                    <option value="Oruro" {% if caso.departamento=='Oruro' %}selected{% endif %}>Oruro
+                                    </option>
+                                    <option value="Pando" {% if caso.departamento=='Pando' %}selected{% endif %}>Pando
+                                    </option>
+                                    <option value="Beni" {% if caso.departamento=='Beni' %}selected{% endif %}>Beni
+                                    </option>
+                                    <option value="Tarija" {% if caso.departamento=='Tarija' %}selected{% endif %}>
+                                        Tarija</option>
+                                    <option value="Chuquisaca" {% if caso.departamento=='Chuquisaca' %}selected{% endif
+                                        %}>Chuquisaca</option>
+                                    <option value="Potosi" {% if caso.departamento=='Potosi' %}selected{% endif %}>
+                                        Potosi</option>
+                                </select>
+                            </div>
+
+
+
+                        </div>
+                        <!-- /.card-body -->
+
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <!--button type="button" class="btn btn-primary">Save changes</button-->
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+
+    <div class="modal fade" id="modal-agregar-casquillo-{{caso.id_caso}}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Casquillos del caso</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/perito/casquillos/agregar/{{caso.id_caso}}" method="POST"
+                        enctype="multipart/form-data">
+                        <div class="card-body">
+
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Caso</label>
+                                <select class="form-control" name="caso" required>
+                                    <option value="{{caso.id_caso}}" selected>{{caso.rup}} {{caso.departamento}}
+                                    </option>
+                                </select>
+                            </div>
+
+                            
+
+                            <div class="casquillos-container">
+
+                                {% if caso.casquillos %}
+                                    {% for casquillo in caso.casquillos %}
+                                        <div class="casquillo-group existing">
+                                        <img src="{{ url_for('static', filename=casquillo.direccion_imagen) }}" alt="casquillo" style="width: 200px;">
+                                        <button type="button"
+                                                class="btn btn-sm btn-danger remove-casquillo-btn">
+                                            ✕
+                                        </button>
+                                        {# Este input oculta la ruta para reenviarla #}
+                                        <input type="hidden" name="existing_paths[]" value="{{ casquillo.id_casquillo }}">
+                                        </div>
+                                    {% endfor %}
+
+                                {% endif %}
+
+                            </div>
+
+                            <div class="row">
+                                <button type="button" class="btn btn-success btn-sm  add-casquillo-btn">Agregar
+                                    Casquillos <i class="fa fa-plus"></i></button>
+                            </div>
+
+
+
+
+                        </div>
+                        <!-- /.card-body -->
+
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <!--button type="button" class="btn btn-primary">Save changes</button-->
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- TEMPLATE OCULTO para clonar -->
+    <template id="casquillo-template">
+        <div class="casquillo-group border p-2 mb-2 position-relative" data-pos-x="0" data-pos-y="0" data-scale="1">
+          <input type="file" accept="image/*" class="form-control form-control-sm mb-2 casquillo-file">
+          <div class="image-editor mb-2">
+            <img src="" alt="Casquillo" draggable="false">
+            <div class="circle-overlay"></div>
+          </div>
+          <input type="range" min="0.5" max="2" step="0.01" value="1" class="form-range mb-2 casquillo-zoom">
+          <button type="button" class="btn btn-sm btn-danger remove-casquillo-btn position-absolute top-0 end-0">
+            ✕
+          </button>
+        </div>
+      </template>
+
+
+    <div class="row">
+        <div class="col-12">
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Casos Registrados en el Sistema</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="row">
+                        <button class="btn btn-success" data-toggle="modal" data-target="#modal-agregar-caso">Agregar
+                            Caso <i class="fa fa-plus"></i></button>
+                    </div>
+                    <br />
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>RUP</th>
+                                <th>Descripción</th>
+                                <th>Departamento</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if casos %}
+                            {% for caso in casos %}
+                            <tr>
+                                <td>{{caso.id_caso}}</td>
+                                <td>{{caso.rup}}</td>
+                                <td>{{caso.descripcion}}</td>
+                                <td>{{caso.departamento}}</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm" data-toggle="modal"
+                                        data-target="#modal-editar-caso-{{caso.id_caso}}">Editar Caso <i
+                                            class="fa fa-edit"></i></button>
+                                    <br />
+                                    <button class="btn btn-success btn-sm" data-toggle="modal"
+                                        data-target="#modal-agregar-casquillo-{{caso.id_caso}}">Casquillos <i
+                                            class="fas fa-monument"></i></button>
+                                    <br />
+                                    <a href="/perito/casos/eliminar/{{caso.id_caso}}"><button
+                                            class="btn btn-danger btn-sm">Eliminar Caso <i
+                                                class="fa fa-trash"></i></button></a>
+                                    <br />
+                                    <a href="/perito/casos/ver/{{caso.id_caso}}"><button
+                                            class="btn btn-primary btn-sm">Ver Caso <i
+                                                class="fa fa-eye"></i></button></a>
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>RUP</th>
+                                <th>Descripción</th>
+                                <th>Departamento</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts_final %}
+<!-- DataTables  & Plugins -->
+<script src="{{url_for('static', filename='/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/datatables-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/datatables-buttons/js/buttons.bootstrap4.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/jszip/jszip.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/pdfmake/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/pdfmake/vfs_fonts.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{url_for('static', filename='/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
+<script>
+    $(function () {
+        $("#example1").DataTable({
+            "responsive": true, "lengthChange": false, "autoWidth": false,
+            "buttons": [/*"copy", "csv", "excel", "pdf", "print", */"colvis"]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        $('#example2').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+        });
+    });
+</script>
+<script>
+    //const nav_principal = document.getElementById('nav_casos')
+
+    //nav_principal.classList.add('active')
+
+</script>
+<style>
+    .casquillo-group { width: 240px; }
+    .image-editor {
+      position: relative; width: 200px; height: 200px;
+      overflow: hidden; border: 1px solid #ccc; margin: 0 auto;
+      cursor: grab;
+    }
+    .image-editor img {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      user-select: none;
+    }
+    .circle-overlay {
+      pointer-events: none;
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: 2px dashed rgba(0,0,0,0.5);
+      border-radius: 50%; box-sizing: border-box;
+    }
+  </style>
+
+<!-- LÓGICA JS -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    
+      // Añadir casquillo
+      document.body.addEventListener('click', e => {
+        if (!e.target.matches('.add-casquillo-btn')) return;
+        const modal = e.target.closest('.modal');
+        const container = modal.querySelector('.casquillos-container');
+        const tpl = document.getElementById('casquillo-template');
+        const group = tpl.content.firstElementChild.cloneNode(true);
+        initCasquilloGroup(group);
+        container.appendChild(group);
+      });
+    
+      // Eliminar casquillo
+      document.body.addEventListener('click', e => {
+        if (e.target.matches('.remove-casquillo-btn')) {
+          e.target.closest('.casquillo-group').remove();
+        }
+      });
+    
+      // Interceptar envío de **todos** los formularios para recortar y enviar por fetch
+      document.body.addEventListener('submit', async e => {
+        if (!e.target.matches('form')) return;
+        e.preventDefault();
+        const form = e.target;
+        const action = form.action;
+        console.log(action);
+        const method = form.method.toUpperCase();
+    
+        const payload = new FormData();
+        // Añade el resto de inputs (texto, selects…)
+        for (let el of form.querySelectorAll('input[name], select[name], textarea[name]')) {
+          if (el.type === 'file') continue;
+          payload.append(el.name, el.value);
+        }
+    
+        // Procesa cada casquillo
+        const groups = form.querySelectorAll('.casquillo-group');
+        for (let i = 0; i < groups.length; i++) {
+          const grp = groups[i];
+          const img = grp.querySelector('img');
+          const posX = parseFloat(grp.dataset.posX);
+          const posY = parseFloat(grp.dataset.posY);
+          const scale = parseFloat(grp.dataset.scale);
+    
+          // Crea canvas 640×640
+          const canvas = document.createElement('canvas');
+          canvas.width = 640;
+          canvas.height = 640;
+          const ctx = canvas.getContext('2d');
+    
+          // Círculo de recorte
+          ctx.beginPath();
+          ctx.arc(320, 320, 320, 0, 2 * Math.PI);
+          ctx.closePath();
+          ctx.clip();
+    
+          // Aplica transform para centrar/zoomear según preview CSS
+          const factor = canvas.width / grp.querySelector('.image-editor').clientWidth; // =3.2 si editor es 200px
+          ctx.translate(320 + posX * factor, 320 + posY * factor);
+          ctx.scale(scale * factor, scale * factor);
+          ctx.translate(-img.naturalWidth / 2, -img.naturalHeight / 2);
+    
+          // Dibuja imagen
+          ctx.drawImage(img, 0, 0);
+    
+          // Convierte a blob PNG y lo añade al FormData
+          // eslint-disable-next-line no-await-in-loop
+          const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+          payload.append('casquillos_images[]', blob, `casquillo-${i}.png`);
+        }
+    
+        // Envía al servidor
+        fetch(action, { method, body: payload })
+          .then(r => {
+            if (r.ok) {
+              // Puedes cerrar modal o refrescar
+              form.closest('.modal').querySelector('.btn-close').click();
+            } else {
+              alert('Error guardando casquillos');
+            }
+          })
+          .catch(() => alert('Error de red'));
+      });
+    
+      // Inicializa cada bloque para drag/zoom/file-change
+      function initCasquilloGroup(group) {
+        const fileIn = group.querySelector('.casquillo-file');
+        const img = group.querySelector('img');
+        const zoom = group.querySelector('.casquillo-zoom');
+        let scale = 1, pos = { x: 0, y: 0 }, drag = { active: false, startX: 0, startY: 0 };
+    
+        fileIn.addEventListener('change', () => {
+          const file = fileIn.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            img.src = reader.result;
+            img.onload = () => {
+              // resetea
+              pos = { x: 0, y: 0 };
+              scale = 1;
+              zoom.value = 1;
+              updateTransform();
+            };
+          };
+          reader.readAsDataURL(file);
+        });
+    
+        zoom.addEventListener('input', () => {
+          scale = parseFloat(zoom.value);
+          updateTransform();
+        });
+    
+        img.addEventListener('mousedown', e => {
+          e.preventDefault();
+          drag.active = true;
+          drag.startX = e.clientX - pos.x;
+          drag.startY = e.clientY - pos.y;
+          img.style.cursor = 'grabbing';
+        });
+        document.addEventListener('mouseup', () => {
+          drag.active = false;
+          img.style.cursor = 'grab';
+        });
+        document.addEventListener('mousemove', e => {
+          if (!drag.active) return;
+          pos.x = e.clientX - drag.startX;
+          pos.y = e.clientY - drag.startY;
+          updateTransform();
+        });
+    
+        function updateTransform() {
+          img.style.transform = `translate(calc(-50% + ${pos.x}px), calc(-50% + ${pos.y}px)) scale(${scale})`;
+          // Guarda para el recorte
+          group.dataset.posX = pos.x;
+          group.dataset.posY = pos.y;
+          group.dataset.scale = scale;
+        }
+      }
+    
+    });
+    </script>
+{% endblock %}
