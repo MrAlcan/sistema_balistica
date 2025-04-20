@@ -3,6 +3,7 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 from app.services.serviciosAutenticacion import token_requerido
 from app.services.serviciosUsuario import ServiciosUsuario
 from app.services.serviciosCaso import ServiciosCaso
+from app.services.serviciosCasquillo import ServiciosCasquillo
 import os
 
 administrador_bp = Blueprint('administrador_bp', __name__)
@@ -256,3 +257,50 @@ def eliminar_caso(datos_usuario, id):
         return redirect(url_for('administrador_bp.vista_casos'))
 
 # ------------------------------- FIN FUNCIONES CASOS ------------------------------------
+
+
+
+@administrador_bp.route('/generar/pdf/caso/<id>', methods=['GET'])
+@token_requerido
+def generar_pdf(datos_usuario, id):
+    id_usuario = datos_usuario['id_usuario']
+    datos = ServiciosUsuario.obtener_por_id(id_usuario)
+    datos['nombre'] = str(datos['nombres']).split(' ')[0]
+    datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+
+    #balas_mostrar = ServiciosBala.obtener_todos()
+    balas_caso = ServiciosCasquillo.obtener_por_caso(id)
+    cantidad_indice = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    cont=0
+    print("dato_bala")
+    print("helloda")
+    #print(balas_mostrar)
+    #for bala in balas_mostrar:
+    #    print(bala['id_caso'])
+    #    id_bala_g = int(bala['id_caso'])
+    #    cont = cont + 1
+    #    if id_bala_g==int(id):
+    #        print(bala)
+    #        print(id)
+    #        balas_caso.append(bala)
+
+    #datos_caso = ServiciosCaso.obtener_id(id)
+    datos_caso = ServiciosCaso.obtener_por_id(id)
+    id_experto = datos_caso['id_experto']
+    #datos_experto = ServiciosExperto.obtener_id(id_experto)
+    datos_experto = ServiciosUsuario.obtener_por_id(id_experto)
+    id_usuario_experto = datos_experto['id_usuario']
+    datos_usuario_experto = ServiciosUsuario.obtener_por_id(id_usuario_experto)
+    datos_usuario_solicitante = ServiciosUsuario.obtener_por_id(id_usuario)
+
+    respuesta = ServiciosCaso.generar_horizontal_pdf(datos_usuario_solicitante, datos_usuario_experto, datos_experto, datos_caso, balas_caso)
+    print('-'*50)
+    print('DEBUG')
+    print(respuesta)
+    print(len(respuesta.getvalue()))
+
+    response = make_response(respuesta.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f'inline; filename="informe_caso_{id}.pdf"'
+
+    return response

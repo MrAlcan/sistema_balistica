@@ -272,7 +272,8 @@ class ServiciosCaso():
                         
 
                         #comparaciones_str = comparaciones_str + f'\n----------------------------------------------------------\nComparación con Casquillo con ID: {str(id_bala_comparacion)}\nAngulo Casquillo ' + str(id_bala_comparacion) +': ' +str(ang_2) + '\nSimilitud: ' + str(similitud).split('.')[0]+'.'+str(similitud).split('.')[1][0:2]+'%\nSimilitud Basada en los Centros de los Golpes:\n' + str(porcentaje_dif)
-
+        else:
+            elementos.append(Paragraph("Sin Casquillos Registrados"))
 
                 
                 
