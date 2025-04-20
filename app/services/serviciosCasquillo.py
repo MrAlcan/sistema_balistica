@@ -16,10 +16,19 @@ class ServiciosCasquillo():
             if casquillos:
                 for casquillo in casquillos:
                     if int(casquillo.id_casquillo) not in ids_casquillos:
-                        casquillo.activo == 0
-                        os.remove(os.path.join(current_app.config['UPLOAD_FOLDER_CASOS'], casquillo.img_original))
+                        casquillo.activo = 0
+                        
+                        
+                        ruta_casquillo = os.path.join('app/static', str(casquillo.imagen_original))
+                        filename = str(casquillo.imagen_original).split('/')[-1]
+                        carpeta = str(casquillo.imagen_original).split('/')[-2]
+                        carpeta_caso = str(casquillo.imagen_original).split('/')[-3]
+                        ruta_casquillos = os.path.join('app', 'static', 'casos', carpeta_caso, carpeta, filename)
+                        print(ruta_casquillos)
+                        os.remove(ruta_casquillos)
+                db.session.commit()
                     
-                    db.session.commit()
+                    
         return True
     
 
@@ -27,8 +36,8 @@ class ServiciosCasquillo():
         #casquillo = Casquillo(id_caso, tipo, img_original, img_procesada, img_contorno, csv, angulo, centro, id_creado)
 
         direccion_img_original = str(img_original).split('static')[1]
-        direccion_img_procesada = str(img_procesada).split('static')[1]+".png"
-        direccion_img_contorno = str(img_contorno).split('static')[1]+".png"
+        direccion_img_procesada = str(img_procesada).split('static')[1]#+".png"
+        direccion_img_contorno = str(img_contorno).split('static')[1]#+".png"
         direccion_contornos = str(contornos).split('static')[1]
         direccion_img_original = direccion_img_original.replace('\\', '/')
         direccion_img_procesada = direccion_img_procesada.replace('\\', '/')
@@ -39,3 +48,13 @@ class ServiciosCasquillo():
         db.session.add(nuevo_casquillo)
         db.session.commit()
         return True
+    
+    def obtener_cantidad(id_caso):
+        casquillos = Casquillo.query.filter(Casquillo.id_caso==id_caso).all()
+
+        contador = 0
+        if casquillos:
+            for casquillo in casquillos:
+                contador = contador + 1
+        
+        return contador

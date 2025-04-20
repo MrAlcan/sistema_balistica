@@ -170,7 +170,7 @@ def agregar_casquillos(datos_usuario, id):
     if not os.path.exists(direccion_carpeta_procesados):
         os.mkdir(direccion_carpeta_procesados)
 
-    contador = 0
+    contador = ServiciosCasquillo.obtener_cantidad(id)
     
     if existing:
         ids_casquillos = []
@@ -185,6 +185,10 @@ def agregar_casquillos(datos_usuario, id):
     for f in new_files:
         if f and f.filename:
             filename = secure_filename(f.filename)
+            filename = str(filename).split('-')[0]
+            filename = filename + "-" + str(contador)+".png"
+            filename = secure_filename(filename)
+            contador = contador + 1
             nombre_contorno = str(filename).split('.')[0]+".txt"
             save_path = os.path.join(direccion_carpeta_originales, filename)
             direccion_img_procesada = os.path.join(direccion_carpeta_procesados, filename)
