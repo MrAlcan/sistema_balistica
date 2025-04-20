@@ -8,6 +8,37 @@
     href="{{url_for('static', filename='/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
 <link rel="stylesheet"
     href="{{url_for('static', filename='/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
+
+    <style>
+        .circle-container {
+          width: 300px;
+          /*height: 200px;*/
+          height: 300px;
+          border-radius: 50%; overflow: hidden;
+          display: inline-block; margin: 0 10px 10px;
+          position: relative;
+          background: #f0f0f0;
+        }
+        .circle-container img {
+          position: absolute;
+          top: 50%; left: 50%;
+          transform: translate(-50%, -50%) rotate(0deg);
+          height: 100%; width: auto;
+        }
+        .casquillo-item { margin-bottom: 30px; }
+        #composite-container {
+          width: 300px;
+          /*height: 200px;*/
+          height: 300px;
+          border-radius: 50%; overflow: hidden;
+          position: relative; margin-bottom: 10px;
+          background: #e0e0e0;
+        }
+        #spinner { display: none; }
+        .input-range{
+            width: 200px;
+        }
+      </style>
 {% endblock %}
 
 {% block titulo_contenido %}
@@ -69,6 +100,9 @@
                                 <p>{{datos.nombres}} {{datos.apellidos}}</p>
                             </div>
                         </div>
+                        <div class="row">
+                            <a class="btn btn-primary" href="/perito/generar/pdf/caso/{{caso.id_caso}}" target="_blank">Generar Informe PDF <i class="fa fa-file-pdf-o"></i></a>
+                        </div>
                         
                     </div>
                     <!--table id="example1" class="table table-bordered table-striped">
@@ -126,6 +160,7 @@
                 <!-- /.card-header -->
                 <div class="card-body">
                     <!--div class="container"-->
+                    <!--
                         {% if casquillos %}
                             {% for casquillo in casquillos %}
                                 <div class="row">
@@ -146,6 +181,53 @@
                         {% else %}
                         <p style="color: red;"><center><b style="color: red;">Sin Casquillos Registrados</b></center></p>
                         {% endif %}
+                    -->
+
+                    <div id="casquillos-list">
+                        {% if casquillos %}
+
+                            {% for casquillo in casquillos %}
+                            <div class="casquillo-item" data-id="{{ casquillo.id_casquillo }}">
+                                <div class="images-container">
+                                <div class="circle-container">
+                                    <img src="{{ url_for('static', filename=casquillo.imagen_procesada) }}"
+                                        id="img1-{{ casquillo.id_casquillo }}">
+                                </div>
+                                <div class="circle-container">
+                                    <img src="{{ url_for('static', filename=casquillo.imagen_contorno) }}"
+                                        id="img2-{{ casquillo.id_casquillo }}">
+                                </div>
+                                </div>
+                                <label>Rotación (0–360°):
+                                <input type="range" min="0" max="360" value="0"
+                                        class="angle-range input-range" data-id="{{ casquillo.id_casquillo }}">
+                                </label>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                        <p style="color: red;"><center><b style="color: red;">Sin Casquillos Registrados</b></center></p>
+                        {% endif %}
+                      </div>
+                    
+                      <h3>Controles Globales</h3>
+                      <div id="composite-container"></div>
+                      <div id="composite-controls">
+                        {% if casquillos %}
+                            {% for casquillo in casquillos %}
+                            <label>Casquillo {{ casquillo.id_casquillo }}:
+                                <input type="range" min="0" max="360" value="0"
+                                    class="angle-range-final input-range" data-id="{{ casquillo.id_casquillo }}"><br />
+                            </label><br />
+                            {% endfor %}
+                        {% endif %}
+                        
+                      </div>
+                    
+                      <button id="process-btn" class="btn btn-primary">Procesar Ángulos <i class="fa fa-server"></i></button>
+                      <div id="spinner">🔄 Procesando…</div>
+                      <pre id="result">
+                        <div id="result-container"></div>
+                      </pre>
                         
                     <!--/div-->
                     
@@ -195,4 +277,143 @@
     nav_principal.classList.add('active')
 
 </script>
+<script>
+    function renderResults(data) {
+        const container = document.getElementById('result-container');
+        container.innerHTML = '';  // limpia contenido previo
+      
+        /*const {
+          textos_dis_centros = [],
+          distancias_centros = [],
+          textos = [],
+          similitudes = [],
+          porcentaje_dif_list = [],
+          diferencias_centros = [],
+          pixeles_iguales = [],
+          pixeles_totales = []
+        } = data;*/
+
+        const textos_dis_centros = data.textos_dis_centros;
+        const distancias_centros = data.distancias_centros;
+        const textos = data.textos;
+        const similitudes = data.similitudes;
+        const porcentaje_dif_list = data.porcentaje_dif_list;
+        const diferencias_centros = data.diferencias_centros;
+        const pixeles_iguales = data.pixeles_iguales;
+        const pixeles_totales = data.pixeles_totales;
+      
+        // Primera sección: textos_dis_centros y distancias_centros
+        textos_dis_centros.forEach((corr, index) => {
+          const block = document.createElement('div');
+          block.innerHTML = `<p><strong>${corr}</strong></p><p><strong>Distancia del Centro del Golpe al Centro del Casquillo:</strong> ${distancias_centros[index]}</p>`;
+          container.appendChild(block);
+        });
+      
+        // Segunda sección: textos y demás listas
+        textos.forEach((corr, index) => {
+          const block = document.createElement('div');
+          block.innerHTML = `<p>-------------------------------------------------------------------------------------------</p>
+            <p><strong>Comparación:</strong> ${corr}</p><p><strong>Similitud de comparación:</strong> ${similitudes[index]}</p><p><strong>Similitud de cercanía de los Centros de los Golpes:</strong> ${porcentaje_dif_list[index]}</p><p><strong>Distancia de los Centros de los Golpes:</strong> ${diferencias_centros[index]}</p><p><strong>Píxeles Iguales:</strong> ${pixeles_iguales[index]}</p><p><strong>Píxeles Totales:</strong> ${pixeles_totales[index]}</p>`;
+          container.appendChild(block);
+        });
+      }
+    // 1) funciones helper
+    function rotateCasquillo(id, angle) {
+      document.getElementById(`img1-${id}`)
+              .style.transform = `translate(-50%,-50%) rotate(${angle}deg)`;
+      document.getElementById(`img2-${id}`)
+              .style.transform = `translate(-50%,-50%) rotate(${angle}deg)`;
+    }
+  
+    function updateComposite() {
+      const cont = document.getElementById('composite-container');
+      cont.innerHTML = '';
+      // por cada casquillo, sobreponemos sus dos imágenes con opacidad
+      document.querySelectorAll('.casquillo-item').forEach(item => {
+        const id = item.dataset.id;
+        const angle = item.querySelector('.angle-range').value;
+        [/*'img1',*/'img2'].forEach(pref => {
+          const src = document.getElementById(`${pref}-${id}`).src;
+          const img = document.createElement('img');
+          img.src = src;
+          img.style.position = 'absolute';
+          img.style.top = img.style.left = '50%';
+          img.style.transform = `translate(-50%,-50%) rotate(${angle}deg)`;
+          img.style.opacity = '0.5';
+          img.style.height = '100%';
+          img.style.width = 'auto';
+          cont.appendChild(img);
+        });
+      });
+    }
+  
+    // 2) listeners individuales ↔ globales
+    document.querySelectorAll('.angle-range').forEach(inp => {
+      inp.addEventListener('input', e => {
+        const id = e.target.dataset.id;
+        const ang = e.target.value;
+        // rota sus imágenes
+        rotateCasquillo(id, ang);
+        // sincroniza control global
+        const fin = document.querySelector(`.angle-range-final[data-id="${id}"]`);
+        if (fin) fin.value = ang;
+        updateComposite();
+      });
+    });
+    document.querySelectorAll('.angle-range-final').forEach(inp => {
+      inp.addEventListener('input', e => {
+        const id = e.target.dataset.id;
+        const ang = e.target.value;
+        // actualiza control individual
+        const sinp = document.querySelector(`.angle-range[data-id="${id}"]`);
+        if (sinp) sinp.value = ang;
+        rotateCasquillo(id, ang);
+        updateComposite();
+      });
+    });
+  
+    // 3) al hacer clic en “Procesar”
+    document.getElementById('process-btn').addEventListener('click', () => {
+      const btn = document.getElementById('process-btn');
+      const spinner = document.getElementById('spinner');
+      const result = document.getElementById('result');
+  
+      // prepara payload
+      const rotations = Array.from(document.querySelectorAll('.casquillo-item'))
+        .map(item => ({
+          id:   parseInt(item.dataset.id),
+          angle: parseFloat(item.querySelector('.angle-range').value)
+        }));
+  
+      // muestra spinner y deshabilita btn
+      spinner.style.display = 'block';
+      btn.disabled = true;
+
+      console.log(rotations)
+  
+      fetch('/perito/casquillos/angulos/procesar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rotations })
+      })
+      .then(r => r.json())
+      .then(data => {
+        // oculta spinner, habilita btn
+        spinner.style.display = 'none';
+        btn.disabled = false;
+        // muestra respuesta
+        //result.textContent = JSON.stringify(data, null, 2);
+        renderResults(data);
+      })
+      .catch(err => {
+        spinner.style.display = 'none';
+        btn.disabled = false;
+        result.textContent = '¡Error de red!';
+        console.error(err);
+      });
+    });
+  
+    // inicializa overlay vacío
+    updateComposite();
+    </script>
 {% endblock %}

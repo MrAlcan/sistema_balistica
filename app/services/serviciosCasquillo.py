@@ -76,4 +76,23 @@ class ServiciosCasquillo():
         respuesta = SerializadorUniversal.serializar_lista(casquillos, datos_requeridos)
 
         return respuesta
+    
+    def obtener_por_id(id_casquillo):
+        casquillo = Casquillo.query.filter(Casquillo.activo==1, Casquillo.id_casquillo==id_casquillo).first()
+        if not casquillo:
+            return None
+        datos_requeridos = ['id_casquillo', 'id_caso', 'tipo', 'imagen_original', 'imagen_procesada', 'imagen_contorno', 'csv', 'angulo_rotacion', 'centro_contorno']
+
+        respuesta = SerializadorUniversal.serializar_unico(casquillo, datos_requeridos)
+
+        return respuesta
+    
+    def actualizar_angulos(id_casquillo, angulo):
+        casquillo = Casquillo.query.filter(Casquillo.activo==1, Casquillo.id_casquillo==id_casquillo).first()
+        if not casquillo:
+            return None
+        
+        casquillo.angulo_rotacion = str(angulo)
+        db.session.commit()
+        return True
         
