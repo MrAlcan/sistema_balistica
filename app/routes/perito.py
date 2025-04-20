@@ -45,7 +45,7 @@ def vista_caso_id(datos_usuario, id):
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
 
-    caso = ServiciosCaso.obtener_por_id(id)
+    caso = ServiciosCaso.obtener_por_id_y_experto(id, id_usuario)
 
     if not caso:
 
@@ -55,8 +55,10 @@ def vista_caso_id(datos_usuario, id):
         else:
             # Si no hay referencia, rediriges a una página predeterminada
             return redirect(url_for('perito_bp.vista_casos'))
+    
+    casquillos = ServiciosCasquillo.obtener_por_caso(id)
 
-    return render_template('perito/ver_caso.html', datos=datos, caso=caso)
+    return render_template('perito/ver_caso.html', datos=datos, caso=caso, casquillos=casquillos)
 
 
 
@@ -200,8 +202,8 @@ def agregar_casquillos(datos_usuario, id):
             # almacena la ruta relativa (p.ej. 'uploads/'+filename)
             casquillo_nuevo = ServiciosCasquillo.crear(id,
                                                        save_path,
-                                                       direccion_carpeta_procesados,
-                                                       direccion_carpeta_mascaras,
+                                                       direccion_img_procesada,
+                                                       direccion_img_contornos,
                                                        direccion_contornos,
                                                        centro,
                                                        id_usuario)

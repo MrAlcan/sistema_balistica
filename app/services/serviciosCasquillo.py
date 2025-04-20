@@ -58,3 +58,22 @@ class ServiciosCasquillo():
                 contador = contador + 1
         
         return contador
+
+    def obtener_todos():
+        casquillos = Casquillo.query.filter(Casquillo.activo==1).all()
+        datos_requeridos = ['id_casquillo', 'id_caso', 'tipo', 'imagen_original', 'imagen_procesada', 'imagen_contorno', 'csv', 'angulo_rotacion', 'centro_contorno']
+
+        respuesta = SerializadorUniversal.serializar_lista(casquillos, datos_requeridos)
+
+        return respuesta
+    
+    def obtener_por_caso(id_caso):
+        casquillos = Casquillo.query.filter(Casquillo.activo==1, Casquillo.id_caso==id_caso).all()
+        if not casquillos:
+            return None
+        datos_requeridos = ['id_casquillo', 'id_caso', 'tipo', 'imagen_original', 'imagen_procesada', 'imagen_contorno', 'csv', 'angulo_rotacion', 'centro_contorno']
+
+        respuesta = SerializadorUniversal.serializar_lista(casquillos, datos_requeridos)
+
+        return respuesta
+        
