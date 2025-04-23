@@ -9,7 +9,7 @@ from reportlab.lib.pagesizes import letter, landscape
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, PageBreak
 from datetime import datetime
 import queue
 from io import BytesIO
@@ -233,6 +233,8 @@ class ServiciosCaso():
                         
                         tabla_balistica = []
                         tabla_balistica.append(cabecera_balistica)
+                        fila_tipos = [Paragraph(f"<b>{bala['tipo']}</b>", estilo_tabla_paragrah),Paragraph(f"<b>{bala_c['tipo']}</b>", estilo_tabla_paragrah)]
+                        tabla_balistica.append(fila_tipos)
 
                         direccion_imagen_procesada = "app/static"+str(bala['imagen_procesada'])#os.path.join(os.getcwd(), str(bala['imagen_procesada']))
                         direccion_imagen_procesada_c = "app/static"+str(bala_c['imagen_procesada'])#os.path.join(os.getcwd(), str(bala_c['imagen_procesada']))
@@ -262,13 +264,13 @@ class ServiciosCaso():
                             ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
                             ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
                             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                            ('SPAN', (0, 2), (1, 2)),
+                            ('SPAN', (0, 3), (1, 3)),
                         ])
 
                         tabla_final_balas.setStyle(estilo_tabla_balas)
 
                         elementos.append(tabla_final_balas)
-                        elementos.append(Spacer(1, 90))
+                        elementos.append(PageBreak())
 
                         
 
