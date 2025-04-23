@@ -173,6 +173,11 @@ Casos
                                 </select>
                             </div>
 
+                            <!--div class="form-group">
+                                <label for="">Tipo de Casquillos</label>
+                                <input type="text" class="form-control" name="tipo" required>
+                            </div-->
+
                             
 
                             <div class="casquillos-container">
@@ -180,6 +185,8 @@ Casos
                                 {% if caso.casquillos %}
                                     {% for casquillo in caso.casquillos %}
                                         <div class="casquillo-group-2 existing">
+                                            <label>{{casquillo.tipo}}</label>
+                                            <br />
                                         <img src="{{ url_for('static', filename=casquillo.direccion_imagen) }}" alt="casquillo" style="width: 200px;">
                                         <button type="button"
                                                 class="btn btn-sm btn-danger remove-casquillo-btn">
@@ -231,9 +238,15 @@ Casos
             <div class="circle-overlay"></div>
           </div>
           <input type="range" min="0" max="2" step="0.01" value="1" class="form-range mb-2 casquillo-zoom">
+          
+          
           <button type="button" class="btn btn-sm btn-danger remove-casquillo-btn position-absolute top-0 end-0">
             ✕
           </button>
+          <div class="form-group">
+            <label for="">Tipo de Casquillo</label>
+            <input type="text" class="form-control tipo" name="casquillos_tipos[]" required>
+          </div>
         </div>
       </template>
 
@@ -422,6 +435,9 @@ Casos
           const posX = parseFloat(grp.dataset.posX);
           const posY = parseFloat(grp.dataset.posY);
           const scale = parseFloat(grp.dataset.scale);
+
+          const tipo_casquillo = grp.querySelector('.tipo');
+          const valor_tipo = tipo_casquillo.value;
     
           // Crea canvas 640×640
           const canvas = document.createElement('canvas');
@@ -447,16 +463,21 @@ Casos
           // Convierte a blob PNG y lo añade al FormData
           // eslint-disable-next-line no-await-in-loop
           const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+
+          //nombre_tipo_casquillo = `tipo-casquillo-${i}`
           payload.append('casquillos_images[]', blob, `casquillo-${i}.png`);
+          //payload.append('casquillos_tipos[]', valor_tipo, `tipo-casquillo-${i}`)
         }
     
         // Envía al servidor
         fetch(action, { method, body: payload })
           .then(r => {
+            console.log(r);
             if (r.ok) {
               // Puedes cerrar modal o refrescar
               
-              form.closest('.modal').querySelector('.btn-close').click();
+              //form.closest('.modal').querySelector('.btn-close').click();
+              location.reload();
             } else {
               alert('Error guardando casquillos');
             }

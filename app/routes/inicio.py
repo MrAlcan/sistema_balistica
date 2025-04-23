@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, current_app, send_from_directory,
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, set_access_cookies, set_refresh_cookies, verify_jwt_in_request, unset_jwt_cookies
 from app.services.serviciosAutenticacion import ServiciosAutenticacion, no_iniciar_sesion
 import os
+from app.services.serviciosUsuario import ServiciosUsuario
 
 inicio_bp = Blueprint('inicio_bp', __name__)
 
@@ -25,6 +26,15 @@ def vista_ingresar():
         
         print(f"bienvenido {dato_contrasena}")
 
+        usuario = ServiciosUsuario.obtener_por_nombre_usuario(nombre_usuario)
+        id_usuario = usuario['id_usuario']
+
+        envio_codigo = ServiciosUsuario.verificacion_doble(id_usuario)
+
+        return redirect(url_for('inicio_bp.vista_verificacion', id=id_usuario))
+
+
+
         token = ServiciosAutenticacion.generar_token(dato_usuario)
         token = str(token)
         print(token)
@@ -40,6 +50,33 @@ def vista_ingresar():
     
 
     return render_template('ingresar.html')
+
+@inicio_bp.route('/verificacion/<id>', methods=['GET', 'POST'])
+def vista_verificacion(id):
+    #envio_codigo = ServiciosUsuario.verificacion_doble(id)
+    if request.method=='POST':
+        datos = request.form
+        codigo_verificacion = str(datos['codigo'])
+        verificar_codigo = ServiciosUsuario.validar_codigo_numerico(id, codigo_verificacion)
+        if verificar_codigo:
+            token = ServiciosAutenticacion.generar_token(id)
+            token = str(token)
+            print(token)
+            
+            if str(verificar_codigo)=='administrador':
+                resp = make_response(redirect(url_for('administrador_bp.vista_inicio')))
+
+            elif str(verificar_codigo)=='perito':
+                resp = make_response(redirect(url_for('perito_bp.vista_inicio')))
+            
+            set_access_cookies(resp, token)
+            return resp
+        else:
+            return render_template('verificacion.html', usuario_mensaje = 'Codigo Erroneo', codigo = codigo_verificacion)
+
+
+    return render_template('verificacion.html')
+
 
 @inicio_bp.route('/cerrar_sesion', methods=['GET'])
 @jwt_required()

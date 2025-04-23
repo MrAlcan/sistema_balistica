@@ -32,7 +32,7 @@ class ServiciosCasquillo():
         return True
     
 
-    def crear(id_caso, img_original, img_procesada, img_contorno, contornos, centro, id_creado):
+    def crear(id_caso, img_original, img_procesada, img_contorno, contornos, centro, id_creado, tipo):
         #casquillo = Casquillo(id_caso, tipo, img_original, img_procesada, img_contorno, csv, angulo, centro, id_creado)
 
         direccion_img_original = str(img_original).split('static')[1]
@@ -44,7 +44,7 @@ class ServiciosCasquillo():
         direccion_img_contorno = direccion_img_contorno.replace('\\', '/')
         direccion_contornos = direccion_contornos.replace('\\', '/')
 
-        nuevo_casquillo = Casquillo(id_caso, 's/n', direccion_img_original, direccion_img_procesada, direccion_img_contorno, direccion_contornos, 0, centro, id_creado)
+        nuevo_casquillo = Casquillo(id_caso, tipo, direccion_img_original, direccion_img_procesada, direccion_img_contorno, direccion_contornos, 0, centro, id_creado)
         db.session.add(nuevo_casquillo)
         db.session.commit()
         return True

@@ -3,9 +3,57 @@ from app.models.usuario import Usuario
 from app.config.extensiones import db, bcrypt
 
 from app.serializer.serializadorUniversal import SerializadorUniversal
-
+from flask_mail import Mail, Message
+from flask import current_app
+from .. import mail
 from datetime import datetime, date, timedelta
 import random
+import string
+
+def generar_contrasena():
+
+    lowercase = random.sample(string.ascii_lowercase, 2)
+    uppercase = random.sample(string.ascii_uppercase, 2)
+    digits = random.sample(string.digits, 2)
+    symbols = random.sample('*-@+!¡', 2)
+
+    password_chars = lowercase + uppercase + digits + symbols
+
+    random.shuffle(password_chars)
+
+    return ''.join(password_chars)
+
+def generar_numero_seis_digitos():
+
+    return random.randint(100000, 999999)
+
+def enviar_credenciales(recipient: str, username: str, password: str) -> None:
+    subject = 'Tus credenciales de acceso'
+    body = (
+        f"Hola,\n\n"
+        f"Aquí tienes tus credenciales de acceso:\n"
+        f"Usuario: {username}\n"
+        f"Contraseña: {password}\n\n"
+        "Saludos."
+    )
+    msg = Message(subject=subject, sender=current_app.config['MAIL_USERNAME'], recipients=[recipient])
+    msg.body = body
+
+    mail.send(msg)
+
+
+def enviar_codigo_numerico(recipient: str, code: int) -> None:
+
+    subject = 'Código de verificación'
+    body = (
+        f"Hola,\n\n"
+        f"Tu código de verificación es: {code}\n\n"
+        "No compartas este código con nadie."
+    )
+    msg = Message(subject=subject, sender=current_app.config['MAIL_USERNAME'], recipients=[recipient])
+    msg.body = body
+
+    mail.send(msg)
 
 class ServiciosUsuario():
 
@@ -26,11 +74,14 @@ class ServiciosUsuario():
                     break
         
         #contrasena = random()
-        contrasena = 'AS465esrf654@*' # generar contraseña random
+        #contrasena = 'AS465esrf654@*' # generar contraseña random
+        contrasena = generar_contrasena()
         
         nuevo_usuario = Usuario(nombre_usuario, contrasena, nombres, apellidos, carnet, correo, rol, grado, id_usuario_creado)
         db.session.add(nuevo_usuario)
         db.session.commit()
+        if nuevo_usuario:
+            enviar_credenciales(correo, nombre_usuario, contrasena)
         return {'status': 'success'}
     
     def modificar(id_usuario, id_usuario_modificado, contrasena=None, nombres=None, apellidos=None, carnet=None, correo=None, rol=None, grado=None):
@@ -155,5 +206,60 @@ class ServiciosUsuario():
         db.session.commit()
 
         return True
+    
+    def verificacion_doble(id_usuario):
+        usuario = Usuario.query.get(id_usuario)
+
+        if not usuario:
+            return None
+        
+        codigo_numerico = generar_numero_seis_digitos()
+
+        usuario.codigo_numerico = codigo_numerico
+        db.session.commit()
+
+        enviar_codigo_numerico(str(usuario.correo), codigo_numerico)
+
+        return True
+    
+    def validar_codigo_numerico(id_usuario, codigo):
+        usuario = Usuario.query.get(id_usuario)
+        if not usuario:
+            return None
+        
+        codigo_numerico_db = str(usuario.codigo_numerico)
+        codigo_numerico_cliente = str(codigo)
+
+        if codigo_numerico_db == codigo_numerico_cliente:
+            return str(usuario.rol)
+        else:
+            return None
+        
+        #return str(usuario.codigo_numerico)
+
+    def obtener_por_correo(correo):
+        usuario = Usuario.query.filter(Usuario.correo==correo).first()
+
+        if not usuario:
+            return None
+        
+        datos_requeridos = ['id_usuario', 'nombre_usuario', 'nombres', 'apellidos', 'carnet', 'correo', 'rol', 'grado', 'activo', 'user_img']
+        
+        respuesta = SerializadorUniversal.serializar_unico(usuario, datos_requeridos)
+
+        return respuesta
+    
+    def obtener_por_nombre_usuario(nombre_usuario):
+        usuario = Usuario.query.filter(Usuario.nombre_usuario==nombre_usuario).first()
+
+        if not usuario:
+            return None
+        
+        datos_requeridos = ['id_usuario', 'nombre_usuario', 'nombres', 'apellidos', 'carnet', 'correo', 'rol', 'grado', 'activo', 'user_img']
+        
+        respuesta = SerializadorUniversal.serializar_unico(usuario, datos_requeridos)
+
+        return respuesta
+        
 
         

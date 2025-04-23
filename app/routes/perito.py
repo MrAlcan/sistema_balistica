@@ -83,6 +83,7 @@ def agregar_caso(datos_usuario):
                                      id_usuario)
     
     referer = request.referrer
+    return jsonify({'success': True}), 200
     if referer:
         return redirect(referer)
     else:
@@ -107,6 +108,7 @@ def editar_caso(datos_usuario, id):
                                          id_usuario)
     
     referer = request.referrer
+    return jsonify({'success': True}), 200
     if referer:
         return redirect(referer)
     else:
@@ -146,6 +148,10 @@ def agregar_casquillos(datos_usuario, id):
     # 1) Recogemos datos
     existing = request.form.getlist('existing_paths[]')  # rutas que siguen
     new_files = request.files.getlist('casquillos_images[]')
+    tipos = request.form.getlist('casquillos_tipos[]')
+    print(tipos)
+    for tip in tipos:
+        print(tip)
 
     carpeta_caso = 'caso_'+str(id)
     '''if os.path.exists(os.path.join(current_app.config['UPLOAD_FOLDER_CASOS'], carpeta_caso)):
@@ -184,8 +190,11 @@ def agregar_casquillos(datos_usuario, id):
 
     # 4) Guardar los nuevos
     procesar_bala = ProcesarBala()
+    contador_lista = 0
     for f in new_files:
         if f and f.filename:
+            tipo_casquillo = tipos[contador_lista]
+            contador_lista = contador_lista + 1
             filename = secure_filename(f.filename)
             filename = str(filename).split('-')[0]
             filename = filename + "-" + str(contador)+".png"
@@ -206,7 +215,8 @@ def agregar_casquillos(datos_usuario, id):
                                                        direccion_img_contornos,
                                                        direccion_contornos,
                                                        centro,
-                                                       id_usuario)
+                                                       id_usuario,
+                                                       tipo_casquillo)
         
 
     return jsonify({'success': True}), 200

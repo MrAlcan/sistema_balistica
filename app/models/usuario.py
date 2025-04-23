@@ -15,6 +15,7 @@ class Usuario(db.Model):
     grado = db.Column(db.String(50))
     user_img = db.Column(db.Text, nullable=True, default=None)
     activo = db.Column(db.Integer, default=1)
+    codigo_numerico = db.Column(db.Integer, nullable=True, default=None)
 
     id_usuario_creado = db.Column(db.Integer, nullable=False)
     id_usuario_modificado = db.Column(db.Integer, nullable=False)

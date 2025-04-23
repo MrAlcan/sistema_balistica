@@ -106,7 +106,8 @@ class ServiciosCaso():
             if casquillos:
                 for casquillo in casquillos:
                     diccionario = {'id_casquillo': int(casquillo.id_casquillo),
-                                   'direccion_imagen': str(casquillo.imagen_original)}
+                                   'direccion_imagen': str(casquillo.imagen_original),
+                                   'tipo': str(casquillo.tipo)}
                     casquillos_dir.append(diccionario)
             
             caso['casquillos'] = casquillos_dir

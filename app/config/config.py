@@ -11,5 +11,11 @@ class Config:
     SECRET_KEY = 'clave_secreta_super_segura'
     SQLALCHEMY_DATABASE_URI = 'mysql://root:@localhost/db_balistica'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = 'us@correo.com'
+    MAIL_PASSWORD = 'contrasena'
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_USE_TLS = False  # IMPORTANTE: no uses TLS si usas SSL
     JWT_TOKEN_LOCATION = ['cookies']
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=60)

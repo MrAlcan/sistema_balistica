@@ -1,4 +1,5 @@
 from flask import Flask, redirect, url_for, request
+from flask_mail import Mail
 
 #añadir cors
 
@@ -8,7 +9,7 @@ from app.config.config import Config
 from app.config.database import iniciar_datos
 from app.config.extensiones import db, bcrypt, jwt
 
-
+mail = Mail()
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -19,6 +20,7 @@ def create_app(config_class=Config):
     db.init_app(app)
     jwt.init_app(app)
     bcrypt.init_app(app)
+    mail.init_app(app)
 
     @jwt.expired_token_loader
     def expired_token_callback(jwt_header, jwt_payload):
