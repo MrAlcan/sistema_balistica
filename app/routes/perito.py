@@ -411,3 +411,18 @@ def generar_pdf(datos_usuario, id):
     response.headers['Content-Disposition'] = f'inline; filename="informe_caso_{id}.pdf"'
 
     return response
+
+
+# ------------------------------------- VSITAS CASQUILLSO 
+
+@perito_bp.route('/casquillos', methods=['GET'])
+@token_requerido
+def vista_casquillos(datos_usuario):
+    id_usuario = datos_usuario['id_usuario']
+    datos = ServiciosUsuario.obtener_por_id(id_usuario)
+    datos['nombre'] = str(datos['nombres']).split(' ')[0]
+    datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+
+    casquillos = ServiciosCasquillo.obtener_por_experto(id_usuario)
+
+    return render_template('perito/casquillos.html', datos=datos, casquillos=casquillos)

@@ -182,8 +182,10 @@ def vista_caso_id(datos_usuario, id):
         else:
             # Si no hay referencia, rediriges a una página predeterminada
             return redirect(url_for('administrador_bp.vista_casos'))
+    
+    casquillos = ServiciosCasquillo.obtener_por_caso(id)
 
-    return render_template('administrador/ver_caso.html', datos=datos, caso=caso)
+    return render_template('administrador/ver_caso.html', datos=datos, caso=caso, casquillos=casquillos)
 
 
 
@@ -304,3 +306,20 @@ def generar_pdf(datos_usuario, id):
     response.headers['Content-Disposition'] = f'inline; filename="informe_caso_{id}.pdf"'
 
     return response
+
+
+
+# ----------------- vista casquillso -----------------------------
+
+
+@administrador_bp.route('/casquillos', methods=['GET'])
+@token_requerido
+def vista_casquillos(datos_usuario):
+    id_usuario = datos_usuario['id_usuario']
+    datos = ServiciosUsuario.obtener_por_id(id_usuario)
+    datos['nombre'] = str(datos['nombres']).split(' ')[0]
+    datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+
+    casquillos = ServiciosCasquillo.obtener_todos()
+
+    return render_template('administrador/casquillos.html', datos=datos, casquillos=casquillos)

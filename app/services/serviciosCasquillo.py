@@ -65,6 +65,18 @@ class ServiciosCasquillo():
 
         respuesta = SerializadorUniversal.serializar_lista(casquillos, datos_requeridos)
 
+        casos = Caso.query.all()
+
+        ids_casos = {}
+
+        if casos:
+            for caso in casos:
+                ids_casos[str(caso.id_caso)] = str(caso.rup)
+        
+        if respuesta:
+            for resp in respuesta:
+                resp['rup'] = ids_casos[str(resp['id_caso'])]
+
         return respuesta
     
     def obtener_por_caso(id_caso):
@@ -95,4 +107,32 @@ class ServiciosCasquillo():
         casquillo.angulo_rotacion = str(angulo)
         db.session.commit()
         return True
+    
+    def obtener_por_experto(id_experto):
+        casos = Caso.query.filter(Caso.activo==1, Caso.id_experto==id_experto).all()
+
+        ids_casos = {}
+
+        casquillos = []
+
+        if casos:
+            for caso in casos:
+                ids_casos[str(caso.id_caso)] = str(caso.rup)
+                casquillos_caso = Casquillo.query.filter(Casquillo.activo==1, Casquillo.id_caso==caso.id_caso).all()
+                if casquillos_caso:
+                    for casquillo in casquillos_caso:
+                        casquillos.append(casquillo)
+
+
+        #casquillos = Casquillo.query.filter(Casquillo.activo==1, Casquillo.id_caso).all()
+        datos_requeridos = ['id_casquillo', 'id_caso', 'tipo', 'imagen_original', 'imagen_procesada', 'imagen_contorno', 'csv', 'angulo_rotacion', 'centro_contorno']
+
+        respuesta = SerializadorUniversal.serializar_lista(casquillos, datos_requeridos)
+
         
+        
+        if respuesta:
+            for resp in respuesta:
+                resp['rup'] = ids_casos[str(resp['id_caso'])]
+
+        return respuesta

@@ -8,6 +8,37 @@
     href="{{url_for('static', filename='/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
 <link rel="stylesheet"
     href="{{url_for('static', filename='/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
+
+    <style>
+        .circle-container {
+          width: 300px;
+          /*height: 200px;*/
+          height: 300px;
+          border-radius: 50%; overflow: hidden;
+          display: inline-block; margin: 0 10px 10px;
+          position: relative;
+          background: #f0f0f0;
+        }
+        .circle-container img {
+          position: absolute;
+          top: 50%; left: 50%;
+          transform: translate(-50%, -50%) rotate(0deg);
+          height: 100%; width: auto;
+        }
+        .casquillo-item { margin-bottom: 30px; }
+        #composite-container {
+          width: 300px;
+          /*height: 200px;*/
+          height: 300px;
+          border-radius: 50%; overflow: hidden;
+          position: relative; margin-bottom: 10px;
+          background: #e0e0e0;
+        }
+        #spinner { display: none; }
+        .input-range{
+            width: 200px;
+        }
+      </style>
 {% endblock %}
 
 {% block titulo_contenido %}
@@ -127,6 +158,21 @@
                 <div class="card-body">
                     <div class="container">
                         {% if casquillos %}
+                            {% for casquillo in casquillos %}
+                                <div class="casquillo-item" data-id="{{ casquillo.id_casquillo }}">
+                                    <div class="images-container">
+                                    <div class="circle-container">
+                                        <img src="{{ url_for('static', filename=casquillo.imagen_procesada) }}"
+                                            id="img1-{{ casquillo.id_casquillo }}" style="transform: translate(-50%, -50%) rotate({{casquillo.angulo_rotacion}});">
+                                    </div>
+                                    <div class="circle-container">
+                                        <img src="{{ url_for('static', filename=casquillo.imagen_contorno) }}"
+                                            id="img2-{{ casquillo.id_casquillo }}" style="transform: translate(-50%, -50%) rotate({{casquillo.angulo_rotacion}});">
+                                    </div>
+                                    </div>
+                                    
+                                </div>
+                            {% endfor %}
                         {% else %}
                         <p style="color: red;"><center><b style="color: red;">Sin Casquillos Registrados</b></center></p>
                         {% endif %}
