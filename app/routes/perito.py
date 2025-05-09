@@ -231,6 +231,16 @@ def procesar_angulos(datos_usuario):
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
 
+    def factorial(numero):
+        fact = 1
+        for i in range(1,numero+1,1):
+            fact = fact * i
+        return fact
+    
+    def combinatoria(numero):
+        result = factorial(numero) / (factorial(numero-2) * 2)
+        return result
+
 
     angulos = []
     direcciones = []
@@ -239,7 +249,9 @@ def procesar_angulos(datos_usuario):
     data = request.get_json(force=True)
     rots = data.get('rotations', [])
     print(data)
-    print(rots)
+    print(len(rots))
+    cantidad_casquillos = int(len(rots))
+    cantidad_comparaciones = combinatoria(cantidad_casquillos)
     #results = {}
     for item in rots:
         cid = item.get('id')
@@ -299,6 +311,8 @@ def procesar_angulos(datos_usuario):
         width = 640
         center = (image_size[0] // 2, image_size[1] // 2)
 
+        media_comparaciones = 0
+
 
 
 
@@ -334,6 +348,8 @@ def procesar_angulos(datos_usuario):
 
                 diferencia_centros_lista.append(str(diferencia_centros))
                 porcentaje_diferencia_centros_list.append(porcentaje_dif)
+
+                media_comparaciones = media_comparaciones + similitud
                 
 
 
@@ -343,6 +359,9 @@ def procesar_angulos(datos_usuario):
                 similitudes.append(similitud)
                 cantidad_pixeles_iguales.append(str(pixeles_iguales))
                 cantidad_pixeles_totales.append(str(total_pixeles))
+            
+        
+        media_comparaciones = media_comparaciones / cantidad_comparaciones
         
         cuerpo = {
             'textos' : comparaciones_dir,
@@ -352,7 +371,9 @@ def procesar_angulos(datos_usuario):
             'diferencias_centros' : diferencia_centros_lista,
             'textos_dis_centros' : texto_centros,
             'distancias_centros' : distancias_centro,
-            'porcentaje_dif_list' : porcentaje_diferencia_centros_list
+            'porcentaje_dif_list' : porcentaje_diferencia_centros_list,
+            'cantidad_comparaciones': cantidad_comparaciones,
+            'media_comparaciones': str(media_comparaciones).split('.')[0] + '.' + str(media_comparaciones).split('.')[1][0:2] + ' %'
         }
         print("imprimiendo cuerpo")
         print("-*"*100)

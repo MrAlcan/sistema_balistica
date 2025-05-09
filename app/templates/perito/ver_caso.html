@@ -101,7 +101,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <a class="btn btn-primary" href="/perito/generar/pdf/caso/{{caso.id_caso}}" target="_blank">Generar Informe PDF <i class="fa fa-file-pdf-o"></i></a>
+                            <a class="btn btn-primary btn-lg" href="/perito/generar/pdf/caso/{{caso.id_caso}}" target="_blank">Generar Informe PDF <i class="fa fa-file-pdf-o"></i></a>
                         </div>
                         
                     </div>
@@ -210,7 +210,11 @@
                       </div>
                     
                       <h3>Controles Globales</h3>
-                      <div id="composite-container"></div>
+                      <div class="d-flex flex-row justify-content-between">
+                        <div id="composite-container" class="mr-5"></div>
+                        <div id="contenedor-estadisticas" class="mx-5 pr-5 mt-5 pt-3"></div>
+                      </div>
+                      
                       <div id="composite-controls">
                         {% if casquillos %}
                             {% for casquillo in casquillos %}
@@ -223,7 +227,7 @@
                         
                       </div>
                     
-                      <button id="process-btn" class="btn btn-primary">Procesar Ángulos <i class="fa fa-server"></i></button>
+                      <button id="process-btn" class="btn btn-primary btn-lg">Procesar Ángulos <i class="fa fa-server"></i></button>
                       <div id="spinner">🔄 Procesando…</div>
                       <pre id="result">
                         <div id="result-container"></div>
@@ -301,6 +305,15 @@
         const diferencias_centros = data.diferencias_centros;
         const pixeles_iguales = data.pixeles_iguales;
         const pixeles_totales = data.pixeles_totales;
+        const cantidad_comparaciones = data.cantidad_comparaciones;
+        const media_comparaciones = data.media_comparaciones;
+
+        const contenedor_estadisticas = document.getElementById('contenedor-estadisticas');
+        contenedor_estadisticas.innerHTML = '';
+
+        const informacionMedia = document.createElement('div');
+        informacionMedia.innerHTML = `<p><strong>Cantidad de Comparaciones: </strong>${cantidad_comparaciones}</p><p><strong>Media de las Comparaciones: </strong>${media_comparaciones}</p><p>-----------------------------------------------------</p>`;
+        contenedor_estadisticas.appendChild(informacionMedia);
       
         // Primera sección: textos_dis_centros y distancias_centros
         textos_dis_centros.forEach((corr, index) => {
