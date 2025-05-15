@@ -38,6 +38,11 @@
         .input-range{
             width: 200px;
         }
+        .wrap-text-no-break {
+          white-space: normal;
+          word-break: normal;
+          overflow-wrap: normal;
+        }
       </style>
 {% endblock %}
 
@@ -311,24 +316,117 @@
         const contenedor_estadisticas = document.getElementById('contenedor-estadisticas');
         contenedor_estadisticas.innerHTML = '';
 
-        const informacionMedia = document.createElement('div');
+        /* AGREGADO DE TABLAS PARA LOS DATOS */
+        const tableMedia = document.createElement('table');
+        tableMedia.classList.add('table');
+        tableMedia.classList.add('table-bordered');
+        
+        const theadMedia = document.createElement('thead');
+        const tbodyMedia = document.createElement('tbody');
+
+        theadMedia.innerHTML = `<tr><th>Cantidad de Comparaciones</th><td>${cantidad_comparaciones}</td></tr>`;
+        tbodyMedia.innerHTML = `<tr><th>Media de las Comparaciones</th><td>${media_comparaciones}</td></tr>`;
+
+        tableMedia.appendChild(theadMedia);
+        tableMedia.appendChild(tbodyMedia);
+        /*console.log(tableMedia);
+        console.log(tableMedia.toString());
+        contenedor_estadisticas.innerHTML = tableMedia;*/
+        contenedor_estadisticas.appendChild(tableMedia);
+
+
+        /*const informacionMedia = document.createElement('div');
         informacionMedia.innerHTML = `<p><strong>Cantidad de Comparaciones: </strong>${cantidad_comparaciones}</p><p><strong>Media de las Comparaciones: </strong>${media_comparaciones}</p><p>-----------------------------------------------------</p>`;
-        contenedor_estadisticas.appendChild(informacionMedia);
+        contenedor_estadisticas.appendChild(informacionMedia);*/
       
         // Primera sección: textos_dis_centros y distancias_centros
+
+        const tableIdsGolpes = document.createElement('table');
+        tableIdsGolpes.classList.add('table');
+        tableIdsGolpes.classList.add('table-bordered');
+        tableIdsGolpes.classList.add('table-striped')
+
+        const theadIdsGolpes = document.createElement('thead');
+        theadIdsGolpes.innerHTML = `<tr>
+          <th class="wrap-text-no-break">Id del Casquillo</th>
+          <th class="wrap-text-no-break">Distancia del Centro del Golpe al Centro del Casquillo</th>
+        </tr>`;
+
+        const tbodyIdsGolpes = document.createElement('tbody');
+
         textos_dis_centros.forEach((corr, index) => {
+          let id_casquillo = String(corr).split(' ').at(-1);
+          const columnaIdsGolpes = document.createElement('tr');
+          columnaIdsGolpes.innerHTML = `<td class="wrap-text-no-break">${id_casquillo}</td><td class="wrap-text-no-break">${distancias_centros[index]}</td>`;
+          tbodyIdsGolpes.appendChild(columnaIdsGolpes);
+        });
+
+        tableIdsGolpes.appendChild(theadIdsGolpes);
+        tableIdsGolpes.appendChild(tbodyIdsGolpes);
+
+        container.appendChild(tableIdsGolpes);
+
+        const divisor = document.createElement('div');
+        divisor.classList.add('border')
+        divisor.classList.add('my-3')
+        
+        container.appendChild(divisor);
+
+
+        /*textos_dis_centros.forEach((corr, index) => {
           const block = document.createElement('div');
           block.innerHTML = `<p><strong>${corr}</strong></p><p><strong>Distancia del Centro del Golpe al Centro del Casquillo:</strong> ${distancias_centros[index]}</p>`;
           container.appendChild(block);
-        });
+        });*/
       
         // Segunda sección: textos y demás listas
+
+        const contenedorTableComparaciones = document.createElement('div');
+        contenedorTableComparaciones.classList.add('table-responsive')
+
+        const tableComparaciones = document.createElement('table');
+        tableComparaciones.classList.add('table');
+        tableComparaciones.classList.add('table-bordered');
+        tableComparaciones.classList.add('table-striped');
+
+        const theadComparaciones = document.createElement('thead');
+        theadComparaciones.innerHTML = `<tr>
+                    <th class="wrap-text-no-break">Imagenes Comparadas</th>
+                    <th class="wrap-text-no-break">Similitud Forma (%)</th>
+                    <th class="wrap-text-no-break">Similitud Centros (%)</th>
+                    <th class="wrap-text-no-break">Distancia entre Centros</th>
+                    <th class="wrap-text-no-break">Pixeles Iguales</th>
+                    <th class="wrap-text-no-break">Pixeles Totales</th>
+                  </tr>`
+
+        tableComparaciones.appendChild(theadComparaciones);
+
+        const tbodyComparaciones = document.createElement('tbody');
+
         textos.forEach((corr, index) => {
+          const columna = document.createElement('tr');
+          //columna.setAttribute('style', 'white-space: normal; word-break: break-word;')
+          columna.innerHTML = ` <td class="wrap-text-no-break">${corr}</td>
+                                <td class="wrap-text-no-break">${similitudes[index]}</td>
+                                <td class="wrap-text-no-break">${porcentaje_dif_list[index]}</td>
+                                <td class="wrap-text-no-break">${diferencias_centros[index]}</td>
+                                <td class="wrap-text-no-break">${pixeles_iguales[index]}</td>
+                                <td class="wrap-text-no-break">${pixeles_totales[index]}</td>`
+          tbodyComparaciones.appendChild(columna);
+        });
+
+        tableComparaciones.appendChild(tbodyComparaciones);
+
+        contenedorTableComparaciones.appendChild(tableComparaciones)
+
+        container.appendChild(contenedorTableComparaciones);
+
+        /*textos.forEach((corr, index) => {
           const block = document.createElement('div');
           block.innerHTML = `<p>-------------------------------------------------------------------------------------------</p>
             <p><strong>Comparación:</strong> ${corr}</p><p><strong>Similitud de comparación:</strong> ${similitudes[index]}</p><p><strong>Similitud de cercanía de los Centros de los Golpes:</strong> ${porcentaje_dif_list[index]}</p><p><strong>Distancia de los Centros de los Golpes:</strong> ${diferencias_centros[index]}</p><p><strong>Píxeles Iguales:</strong> ${pixeles_iguales[index]}</p><p><strong>Píxeles Totales:</strong> ${pixeles_totales[index]}</p>`;
           container.appendChild(block);
-        });
+        });*/
       }
     // 1) funciones helper
     function rotateCasquillo(id, angle) {
