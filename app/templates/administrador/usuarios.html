@@ -205,10 +205,12 @@ Usuarios
                                             <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-editar-usuario-{{usuario.id_usuario}}">Editar Usuario <i class="fa fa-edit"></i></button>
                                             <br />
                                             <!--a href="/administrador/usuarios/eliminar/{{usuario.id_usuario}}"><button class="btn btn-danger btn-sm">Eliminar Usuario <i class="fa fa-trash"></i></button></a-->
-                                            {% if usuario.activo == 1 %}
-                                                <a href="/administrador/usuarios/eliminar/{{usuario.id_usuario}}"><button class="btn btn-danger btn-sm">Eliminar Usuario <i class="fa fa-trash"></i></button></a>
-                                            {% else %}
-                                                <a href="/administrador/usuarios/habilitar/{{usuario.id_usuario}}"><button class="btn btn-success btn-sm">Habilitar Usuario <i class="fa fa-check"></i></button></a>
+                                            {% if datos['id_usuario']!=usuario.id_usuario %}
+                                                {% if usuario.activo == 1 %}
+                                                    <a href="/administrador/usuarios/eliminar/{{usuario.id_usuario}}"><button class="btn btn-danger btn-sm">Eliminar Usuario <i class="fa fa-trash"></i></button></a>
+                                                {% else %}
+                                                    <a href="/administrador/usuarios/habilitar/{{usuario.id_usuario}}"><button class="btn btn-success btn-sm">Habilitar Usuario <i class="fa fa-check"></i></button></a>
+                                                {% endif %}
                                             {% endif %}
                                         </td>
                                     </tr>
