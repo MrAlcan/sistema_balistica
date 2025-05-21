@@ -138,6 +138,7 @@ class ServiciosCaso():
         estilo_subtitulo = ParagraphStyle('Subtitulo', fontSize=10, alignment=0)
         estilo_tabla_paragrah = ParagraphStyle('Normala', fontSize=12, alignment=1)
         estilo_datos = estilos['Normal']
+        estilo_datos_adicionales = ParagraphStyle('datos_adicionales', fontSize=8, alignment=0)
 
         logo_direccion = os.path.join(os.getcwd(),'app', 'static', 'assets', 'images', 'logo.png')
         print(logo_direccion)
@@ -270,6 +271,16 @@ class ServiciosCaso():
                         tabla_final_balas.setStyle(estilo_tabla_balas)
 
                         elementos.append(tabla_final_balas)
+
+                        texto_informativo_final_1 = Paragraph("El rango medio de variación para el coeficiente de verosimilitud oscila entre 88% y 69% y el umbral de confirmación para un cotejo identificativo sugiere ser 88% +/-2.75%, con un margen de error por debajo del 5%.", estilo_datos_adicionales)
+
+                        texto_informativo_final_2 = Paragraph("Al promediar solo los coeficientes de las 'no concordancias', el valor promedio es de 76.4% +/-7.4%. Es decir, una concordancia identificativa balística, previa y visualmente sospechada por el perito como tal, puede confirmarse como tal al encontrar valores por encima del 85%. No obstante, un número mayor de ensayos es necesario, con más marcas y tipos de armamento para constatar este extremo.", estilo_datos_adicionales)
+
+                        elementos.append(Spacer(1,15))
+                        elementos.append(texto_informativo_final_1)
+                        elementos.append(Spacer(1,5))
+                        elementos.append(texto_informativo_final_2)
+
                         elementos.append(PageBreak())
 
                         
