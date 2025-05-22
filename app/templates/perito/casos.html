@@ -18,6 +18,31 @@
         align-items: center;
         justify-content: center;
     }
+    .icon-eliminar{
+
+        margin: auto;
+        font-size: 500%;
+        color: red;
+
+        
+        animation: pulso 1.5s ease-in-out infinite;
+    }
+    .contenedor-icono{
+        /*width: 20rem;
+        height: 20rem;*/
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    @keyframes pulso {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
 </style>
 
 {% endblock %}
@@ -93,6 +118,47 @@ Casos
 
     {% if casos %}
     {% for caso in casos %}
+
+    <div class="modal fade" id="modal-eliminar-caso-{{caso.id_caso}}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger">
+                    <h4 class="modal-title">Eliminar Caso {{caso.id_caso}}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+
+                    <!--div class="contenedor-icono">
+                        
+                    </div-->
+                    <i class="far fa-times-circle icon-eliminar"></i>
+                    <br />
+                    <br />
+
+
+                    <p>¿Esta seguro de eliminar el caso?</p>
+
+                    <!--a href="/perito/casos/eliminar/{{caso.id_caso}}"><button
+                                            class="btn btn-danger btn-sm btn-igual">Eliminar Caso <i
+                                                class="fa fa-trash"></i></button></a-->
+
+
+                    
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+                    <a href="/perito/casos/eliminar/{{caso.id_caso}}"><button
+                                            class="btn btn-danger btn-sm btn-igual">Eliminar Caso <i
+                                                class="fa fa-trash"></i></button></a>
+                    <!--button type="button" class="btn btn-primary">Save changes</button-->
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 
     <div class="modal fade" id="modal-editar-caso-{{caso.id_caso}}">
         <div class="modal-dialog">
@@ -308,9 +374,13 @@ Casos
                                         data-target="#modal-editar-caso-{{caso.id_caso}}">Editar Caso <i
                                             class="fa fa-edit"></i></button>
                                     <br />
-                                    <a href="/perito/casos/eliminar/{{caso.id_caso}}"><button
+                                    <button class="btn btn-danger btn-sm btn-igual" data-toggle="modal"
+                                        data-target="#modal-eliminar-caso-{{caso.id_caso}}">Eliminar Caso <i
+                                            class="fa fa-trash"></i></button>
+
+                                    <!--a href="/perito/casos/eliminar/{{caso.id_caso}}"><button
                                             class="btn btn-danger btn-sm btn-igual">Eliminar Caso <i
-                                                class="fa fa-trash"></i></button></a>
+                                                class="fa fa-trash"></i></button></a-->
 
                                 </td>
                             </tr>
