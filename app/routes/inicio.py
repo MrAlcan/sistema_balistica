@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, current_app, send_from_directory, send_file, make_response, render_template, redirect, url_for
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, set_access_cookies, set_refresh_cookies, verify_jwt_in_request, unset_jwt_cookies
-from app.services.serviciosAutenticacion import ServiciosAutenticacion, no_iniciar_sesion
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, set_access_cookies, set_refresh_cookies, verify_jwt_in_request, unset_jwt_cookies, get_jwt
+from app.services.serviciosAutenticacion import ServiciosAutenticacion, no_iniciar_sesion, token_requerido
 import os
 from app.services.serviciosUsuario import ServiciosUsuario
 
@@ -61,7 +61,8 @@ def vista_verificacion(id):
         if verificar_codigo:
             token = ServiciosAutenticacion.generar_token(id)
             token = str(token)
-            print(token)
+            #print(token)
+            #ServiciosUsuario.actualizar_ultima_conexion_inicio_cerrar(id)
             
             if str(verificar_codigo)=='administrador':
                 resp = make_response(redirect(url_for('administrador_bp.vista_inicio')))
@@ -81,6 +82,9 @@ def vista_verificacion(id):
 @inicio_bp.route('/cerrar_sesion', methods=['GET'])
 @jwt_required()
 def cerrar_sesion():
+    claims = get_jwt()
+    id_usuario = claims.get('id_usuario')
+    ServiciosUsuario.actualizar_ultima_conexion_inicio_cerrar(id_usuario)
     resp = make_response(redirect(url_for('inicio_bp.vista_ingresar')))
     unset_jwt_cookies(resp)
     return resp

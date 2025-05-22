@@ -188,7 +188,7 @@ class ServiciosUsuario():
     def obtener_por_id(id_usuario):
         usuario = Usuario.query.get(id_usuario)
 
-        datos_requeridos = ['id_usuario', 'nombre_usuario', 'nombres', 'apellidos', 'carnet', 'correo', 'rol', 'grado', 'activo', 'user_img']
+        datos_requeridos = ['id_usuario', 'nombre_usuario', 'nombres', 'apellidos', 'carnet', 'correo', 'rol', 'grado', 'activo', 'user_img', 'ultima_conexion']
         
         respuesta = SerializadorUniversal.serializar_unico(usuario, datos_requeridos)
 
@@ -260,6 +260,27 @@ class ServiciosUsuario():
         respuesta = SerializadorUniversal.serializar_unico(usuario, datos_requeridos)
 
         return respuesta
+    
+    def actualizar_ultima_conexion(id_usuario):
+        return None
+        '''usuario = Usuario.query.filter(Usuario.activo==1, Usuario.id_usuario==id_usuario).first()
+
+        if not usuario:
+            return None
+        
+        usuario.ultima_conexion = datetime.now()
+        db.session.commit()
+        return True'''
+    
+    def actualizar_ultima_conexion_inicio_cerrar(id_usuario):
+        usuario = Usuario.query.filter(Usuario.activo==1, Usuario.id_usuario==id_usuario).first()
+
+        if not usuario:
+            return None
+        
+        usuario.ultima_conexion = datetime.now()
+        db.session.commit()
+        return True
         
 
         

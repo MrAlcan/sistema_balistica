@@ -16,20 +16,35 @@
 {% block contenido %}
 
 <div class="card watermark-pattern-iitcup">
-    <div class="card-header">
-        <h3 class="card-title">Bienvenido a KIPKA - PERITOS</h3>
+    <div class="card-header text-center">
+        <h3>Bienvenido a KIPKA - PERITOS</h3>
+        {% if datos %}
+            <h3 class="profile-username text-center">{{datos.nombres}} {{datos.apellidos}}</h3>
+            <p class="text-muted text-center">{{datos.grado}}</p>
+            <p><b>Rol: </b>{{datos.rol}}</p>
+            <p><b>Correo: </b>{{datos.correo}}</p>
+            <p><b>Carnet: </b>{{datos.carnet}}</p>
+            <p><b>Ultima Conexión: </b>{{datos.ultima_conexion}}</p>
+            <!--ul class="list-group list-group-unbordered mb-3">
+                <li class="list-group-item">
+                    <b>Rol: </b> <a class="float-right">{{datos.rol}}</a>
+                </li>
+                <li class="list-group-item">
+                    <b>Correo: </b> <a class="float-right">{{datos.correo}}</a>
+                </li>
+                <li class="list-group-item">
+                    <b>Carnet: </b> <a class="float-right">{{datos.carnet}}</a>
+                </li>
+            </ul-->
+        {% endif %}
     </div>
     <!-- /.card-header -->
     <div class="card-body">
-        <h4>Solución avanzada para la comparación de casquillos de balas</h4>
+
+        <!-- ANTIGUO INICIO -->
+        <!--h4>Solución avanzada para la comparación de casquillos de balas</h4>
         <p>Desarrollado por el Instituto de Investigaciones Técnico Científicas (IITCUP), KIPKA es la herramienta forense más precisa y confiable para la identificación de evidencia balística.</p>
-        
         <center><img src="{{url_for('static', filename='img/imagen.jpeg')}}" alt="Imagen representativa de KIPKA" class="hero-image" style="width: 600px;" /></center>
-        
-
-
-            
-
         <br />
         <h4>Proceso sencillo, resultados exactos</h4>
         <p>En tres simples pasos, puedes obtener una comparación detallada de los casquillos y avanzar en la resolución de tu investigación.</p>
@@ -37,7 +52,112 @@
             <li><strong>Paso 1: Subir las evidencias</strong>: Carga las imágenes de los casquillos de balas que deseas comparar. KIPKA acepta diversos tamaños para facilitar el proceso.</li>
             <li><strong>Paso 2: Realizar la comparación</strong>: Utiliza las herramientas de comparación avanzadas para analizar las marcas, características y detalles de los casquillos.</li>
             <li><strong>Paso 3: Generar el informe</strong>: Con los resultados de la comparación, genera un informe detallado. </li>
-        </ol>
+        </ol-->
+        <!-- FIN ANTIGUO INICIO -->
+
+        <div class="row">
+          <div class="col-md-4 col-sm-6 col-12">
+            <div class="info-box">
+              <span class="info-box-icon bg-info"><i class="fas fa-users"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Usuarios Totales</span>
+                <span class="info-box-number">{{datos_dashboard.cantidad_usuarios}}</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-4 col-sm-6 col-12">
+            <div class="info-box">
+              <span class="info-box-icon bg-success"><i class="fas fa-archive"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Casos Registrados</span>
+                <span class="info-box-number">{{datos_dashboard.cantidad_casos}}</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-4 col-sm-6 col-12">
+            <div class="info-box">
+              <span class="info-box-icon bg-warning"><i class="fas fa-circle-notch"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Casquillos Registrados</span>
+                <span class="info-box-number">{{datos_dashboard.cantidad_casquillos}}</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          
+          <!-- /.col -->
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card text-center p-5">
+
+                    <p><b>Cantidad de Usuarios por Rol</b></p>
+                    <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-center p-5">
+
+                    <p><b>Cantidad de Usuarios Registrados por mes</b></p>
+                    <div class="chart">
+                      <canvas id="lineChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+
+        <div class="row">
+            
+            <div class="col">
+                <div class="card text-center p-5">
+
+                    <p><b>Cantidad de Casos Registrados por mes</b></p>
+                    <div class="chart">
+                      <canvas id="lineChart_casos" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center p-5">
+
+                    <p><b>Cantidad de Casquillos Registrados por mes</b></p>
+                    <div class="chart">
+                      <canvas id="lineChart_casquillos" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+
+
+        <div class="row">
+            <div class="col">
+                <div class="card text-center p-5">
+
+                    <p><b>Cantidad de Casos por Departamento</b></p>
+                    <div class="chart">
+                      <canvas id="lineChart_casos_departamento" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
     </div>
 </div>
@@ -46,4 +166,316 @@
 
 
 {% block scripts_final %}
+
+<!-- ChartJS -->
+<script src="{{url_for('static', filename='plugins/chart.js/Chart.min.js')}}"></script>
+
+<script>
+  $(function () {
+
+    //--------------
+    //- AREA CHART -
+    //--------------
+
+    // Get context with jQuery - using jQuery's .get() method.
+    /*var areaChartCanvas = $('#areaChart').get(0).getContext('2d')*/
+
+    var areaChartData = {
+      labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      datasets: [
+        {
+          label               : 'Digital Goods',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [28, 48, 40, 19, 86, 27, 90]
+        },
+        {
+          label               : 'Electronics',
+          backgroundColor     : 'rgba(210, 214, 222, 1)',
+          borderColor         : 'rgba(210, 214, 222, 1)',
+          pointRadius         : false,
+          pointColor          : 'rgba(210, 214, 222, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data                : [65, 59, 80, 81, 56, 55, 40]
+        },
+      ]
+    }
+
+    var areaChartOptions = {
+      maintainAspectRatio : false,
+      responsive : true,
+      legend: {
+        display: false
+      },
+
+      tooltips: {
+    enabled: true, // <-- Asegúrate de tener esto
+    mode: 'index',
+    intersect: false,
+    callbacks: {
+      label: function(tooltipItem, data) {
+        return tooltipItem.yLabel;
+      }
+    }
+  },
+  hover: {
+    mode: 'nearest',
+    intersect: true
+  },
+
+      scales: {
+        xAxes: [{
+          gridLines : {
+            display : false,
+          }
+        }],
+        yAxes: [{
+          gridLines : {
+            display : false,
+          }
+        }]
+      }
+    }
+
+    // This will get the first returned node in the jQuery collection.
+    /*new Chart(areaChartCanvas, {
+      type: 'line',
+      data: areaChartData,
+      options: areaChartOptions
+    })*/
+
+    //-------------
+    //- LINE CHART -
+    //--------------
+    /*console.log('prueba antes de los datos')
+    const usuarios_cant_d = '{{datos_dashboard.usuarios_nuevos.mes[0]}}'
+    console.log(usuarios_cant_d)*/
+    var lineChartCanvas_usuarios_mes = $('#lineChart').get(0).getContext('2d')
+    var areaChartData_usuarios_mes = {
+      labels  : ['{{datos_dashboard.usuarios_nuevos.mes[0]}}', '{{datos_dashboard.usuarios_nuevos.mes[1]}}', '{{datos_dashboard.usuarios_nuevos.mes[2]}}', '{{datos_dashboard.usuarios_nuevos.mes[3]}}', '{{datos_dashboard.usuarios_nuevos.mes[4]}}', '{{datos_dashboard.usuarios_nuevos.mes[5]}}'],
+      datasets: [
+        {
+          label               : 'Digital Goods',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [{{datos_dashboard.usuarios_nuevos.cantidad[0]}}, {{datos_dashboard.usuarios_nuevos.cantidad[1]}}, {{datos_dashboard.usuarios_nuevos.cantidad[2]}}, {{datos_dashboard.usuarios_nuevos.cantidad[3]}}, {{datos_dashboard.usuarios_nuevos.cantidad[4]}}, {{datos_dashboard.usuarios_nuevos.cantidad[5]}}]
+        },
+      ]
+    }
+    var lineChartOptions_usuarios_mes = $.extend(true, {}, areaChartOptions)
+    var lineChartData_usuarios_mes = $.extend(true, {}, areaChartData_usuarios_mes)
+    lineChartData_usuarios_mes.datasets[0].fill = false;
+    /*lineChartData.datasets[1].fill = false;*/
+    lineChartOptions_usuarios_mes.datasetFill = false
+
+    var lineChart = new Chart(lineChartCanvas_usuarios_mes, {
+      type: 'line',
+      data: lineChartData_usuarios_mes,
+      options: lineChartOptions_usuarios_mes
+    })
+
+    /* --------------------------- GRAFICA PARA CASOS -------------------------------- */
+
+    var lineChartCanvas_casos_mes = $('#lineChart_casos').get(0).getContext('2d')
+    var areaChartData_casos_mes = {
+      labels  : ['{{datos_dashboard.casos_nuevos.mes[0]}}', '{{datos_dashboard.casos_nuevos.mes[1]}}', '{{datos_dashboard.casos_nuevos.mes[2]}}', '{{datos_dashboard.casos_nuevos.mes[3]}}', '{{datos_dashboard.casos_nuevos.mes[4]}}', '{{datos_dashboard.casos_nuevos.mes[5]}}'],
+      datasets: [
+        {
+          label               : 'Digital Goods',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [{{datos_dashboard.casos_nuevos.cantidad[0]}}, {{datos_dashboard.casos_nuevos.cantidad[1]}}, {{datos_dashboard.casos_nuevos.cantidad[2]}}, {{datos_dashboard.casos_nuevos.cantidad[3]}}, {{datos_dashboard.casos_nuevos.cantidad[4]}}, {{datos_dashboard.casos_nuevos.cantidad[5]}}]
+        },
+      ]
+    }
+    var lineChartOptions_casos_mes = $.extend(true, {}, areaChartOptions)
+    var lineChartData_casos_mes = $.extend(true, {}, areaChartData_casos_mes)
+    lineChartData_casos_mes.datasets[0].fill = false;
+    /*lineChartData.datasets[1].fill = false;*/
+    lineChartOptions_casos_mes.datasetFill = false
+
+    var lineChart = new Chart(lineChartCanvas_casos_mes, {
+      type: 'line',
+      data: lineChartData_casos_mes,
+      options: lineChartOptions_casos_mes
+    })
+
+    /* ----------------------------- GRAFICA PARA CASQUILLOS -----------------------------------------------*/
+var lineChartCanvas_casquillos_mes = $('#lineChart_casquillos').get(0).getContext('2d')
+    var areaChartData_casquillos_mes = {
+      labels  : ['{{datos_dashboard.casquillos_nuevos.mes[0]}}', '{{datos_dashboard.casquillos_nuevos.mes[1]}}', '{{datos_dashboard.casquillos_nuevos.mes[2]}}', '{{datos_dashboard.casquillos_nuevos.mes[3]}}', '{{datos_dashboard.casquillos_nuevos.mes[4]}}', '{{datos_dashboard.casquillos_nuevos.mes[5]}}'],
+      datasets: [
+        {
+          label               : 'Digital Goods',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [{{datos_dashboard.casquillos_nuevos.cantidad[0]}}, {{datos_dashboard.casquillos_nuevos.cantidad[1]}}, {{datos_dashboard.casquillos_nuevos.cantidad[2]}}, {{datos_dashboard.casquillos_nuevos.cantidad[3]}}, {{datos_dashboard.casquillos_nuevos.cantidad[4]}}, {{datos_dashboard.casquillos_nuevos.cantidad[5]}}]
+        },
+      ]
+    }
+    var lineChartOptions_casquillos_mes = $.extend(true, {}, areaChartOptions)
+    var lineChartData_casquillos_mes = $.extend(true, {}, areaChartData_casquillos_mes)
+    lineChartData_casquillos_mes.datasets[0].fill = false;
+    /*lineChartData.datasets[1].fill = false;*/
+    lineChartOptions_casquillos_mes.datasetFill = false
+
+    var lineChart = new Chart(lineChartCanvas_casquillos_mes, {
+      type: 'line',
+      data: lineChartData_casquillos_mes,
+      options: lineChartOptions_casquillos_mes
+    })
+
+
+
+
+    /* --------------------------- GRAFICA PARA CASOS DEPARTAMENTO -------------------------------- */
+
+    var lineChartCanvas_casos_departamento = $('#lineChart_casos_departamento').get(0).getContext('2d')
+    var areaChartData_casos_departamento = {
+      labels  : ['La Paz', 'Cochabamba', 'Santa Cruz', 'Potosi', 'Oruro', 'Tarija', 'Chuquisaca', 'Beni', 'Pando'],
+        
+
+        
+      datasets: [
+        {
+          label               : 'Digital Goods',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [{{datos_dashboard.casos_departamento['La Paz']}}, {{datos_dashboard.casos_departamento['Cochabamba']}}, {{datos_dashboard.casos_departamento['Santa Cruz']}}, {{datos_dashboard.casos_departamento['Potosi']}}, {{datos_dashboard.casos_departamento['Oruro']}}, {{datos_dashboard.casos_departamento['Tarija']}}, {{datos_dashboard.casos_departamento['Chuquisaca']}}, {{datos_dashboard.casos_departamento['Beni']}}, {{datos_dashboard.casos_departamento['Pando']}}]
+        },
+      ]
+    }
+    var lineChartOptions_casos_departamento = $.extend(true, {}, areaChartOptions)
+    var lineChartData_casos_departamento = $.extend(true, {}, areaChartData_casos_departamento)
+    lineChartData_casos_departamento.datasets[0].fill = false;
+    /*lineChartData.datasets[1].fill = false;*/
+    lineChartOptions_casos_departamento.datasetFill = false
+
+    var lineChart = new Chart(lineChartCanvas_casos_departamento, {
+      type: 'line',
+      data: lineChartData_casos_departamento,
+      options: lineChartOptions_casos_departamento
+    })
+    //-------------
+    //- DONUT CHART -
+    //-------------
+    // Get context with jQuery - using jQuery's .get() method.
+    var donutChartCanvas_cantidad_roles = $('#donutChart').get(0).getContext('2d')
+    var donutData_cantidad_roles        = {
+      labels: [
+          'Administradores',
+          'Peritos',
+      ],
+      datasets: [
+        {
+          data: [{{datos_dashboard.cantidad_roles.administradores}}, {{datos_dashboard.cantidad_roles.peritos}}],
+          backgroundColor : ['#f56954', '#00a65a'],
+        }
+      ]
+    }
+    var donutOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    new Chart(donutChartCanvas_cantidad_roles, {
+      type: 'doughnut',
+      data: donutData_cantidad_roles,
+      options: donutOptions
+    })
+
+    //-------------
+    //- PIE CHART -
+    //-------------
+    // Get context with jQuery - using jQuery's .get() method.
+    /*var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+    var pieData        = donutData;
+    var pieOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    new Chart(pieChartCanvas, {
+      type: 'pie',
+      data: pieData,
+      options: pieOptions
+    })
+
+    //-------------
+    //- BAR CHART -
+    //-------------
+    var barChartCanvas = $('#barChart').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, areaChartData)
+    var temp0 = areaChartData.datasets[0]
+    var temp1 = areaChartData.datasets[1]
+    barChartData.datasets[0] = temp1
+    barChartData.datasets[1] = temp0
+
+    var barChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      datasetFill             : false
+    }
+
+    new Chart(barChartCanvas, {
+      type: 'bar',
+      data: barChartData,
+      options: barChartOptions
+    })
+
+    //---------------------
+    //- STACKED BAR CHART -
+    //---------------------
+    var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+    var stackedBarChartData = $.extend(true, {}, barChartData)
+
+    var stackedBarChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      scales: {
+        xAxes: [{
+          stacked: true,
+        }],
+        yAxes: [{
+          stacked: true
+        }]
+      }
+    }
+
+    new Chart(stackedBarChartCanvas, {
+      type: 'bar',
+      data: stackedBarChartData,
+      options: stackedBarChartOptions
+    })*/
+  })
+</script>
 {% endblock %}

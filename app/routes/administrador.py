@@ -4,6 +4,7 @@ from app.services.serviciosAutenticacion import token_requerido
 from app.services.serviciosUsuario import ServiciosUsuario
 from app.services.serviciosCaso import ServiciosCaso
 from app.services.serviciosCasquillo import ServiciosCasquillo
+from app.services.ServiciosDashboard import ServiciosDashboard
 import os
 
 administrador_bp = Blueprint('administrador_bp', __name__)
@@ -15,9 +16,30 @@ def vista_inicio(datos_usuario):
     datos = ServiciosUsuario.obtener_por_id(id_usuario)
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+    ServiciosUsuario.actualizar_ultima_conexion(id_usuario)
+
+    cantidad_roles = ServiciosDashboard.obtener_cantidad_peritos_administradores()
+    cantidad_usuarios = ServiciosDashboard.obtener_cantidad_usuarios()
+    cantidad_casos = ServiciosDashboard.obtener_cantidad_casos()
+    cantidad_casquillos = ServiciosDashboard.obtener_cantidad_casquillos()
+    usuarios_nuevos = ServiciosDashboard.obtener_cantidad_usuarios_registrados_ultimos_meses()
+    casquillos_nuevos = ServiciosDashboard.obtener_cantidad_casquillos_registrados_ultimos_meses()
+    casos_nuevos = ServiciosDashboard.obtener_cantidad_casos_registrados_ultimos_meses()
+    casos_departamento = ServiciosDashboard.obtener_cantidad_casos_por_departamento()
+
+    datos_dashboard = {
+        'cantidad_roles': cantidad_roles,
+        'cantidad_usuarios': cantidad_usuarios,
+        'cantidad_casos': cantidad_casos,
+        'cantidad_casquillos': cantidad_casquillos,
+        'usuarios_nuevos': usuarios_nuevos,
+        'casquillos_nuevos': casquillos_nuevos,
+        'casos_nuevos': casos_nuevos,
+        'casos_departamento': casos_departamento
+    }
 
 
-    return render_template('administrador/inicio.html', datos=datos)
+    return render_template('administrador/inicio.html', datos=datos, datos_dashboard=datos_dashboard)
 
 # -------------------------- LOGICA USUARIOS -------------------------------
 
@@ -28,6 +50,7 @@ def agregar_usuario(datos_usuario):
     datos = ServiciosUsuario.obtener_por_id(id_usuario)
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+    ServiciosUsuario.actualizar_ultima_conexion(id_usuario)
 
     formulario = request.form
 
@@ -53,6 +76,7 @@ def editar_usuario(datos_usuario, id):
     datos = ServiciosUsuario.obtener_por_id(id_usuario)
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+    ServiciosUsuario.actualizar_ultima_conexion(id_usuario)
 
     formulario = request.form
 
@@ -79,6 +103,7 @@ def eliminar_usuario(datos_usuario, id):
     datos = ServiciosUsuario.obtener_por_id(id_usuario)
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+    ServiciosUsuario.actualizar_ultima_conexion(id_usuario)
 
     usuario_eliminado = ServiciosUsuario.eliminar(id, id_usuario)
 
@@ -96,6 +121,7 @@ def habilitar_usuario(datos_usuario, id):
     datos = ServiciosUsuario.obtener_por_id(id_usuario)
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+    ServiciosUsuario.actualizar_ultima_conexion(id_usuario)
 
     usuario_eliminado = ServiciosUsuario.habilitar(id, id_usuario)
 
@@ -117,6 +143,7 @@ def vista_usuarios_totales(datos_usuario):
     datos = ServiciosUsuario.obtener_por_id(id_usuario)
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+    ServiciosUsuario.actualizar_ultima_conexion(id_usuario)
 
     usuarios = ServiciosUsuario.obtener_todos()
 
@@ -129,6 +156,7 @@ def vista_usuarios_administradores(datos_usuario):
     datos = ServiciosUsuario.obtener_por_id(id_usuario)
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+    ServiciosUsuario.actualizar_ultima_conexion(id_usuario)
 
     usuarios = ServiciosUsuario.obtener_administradores()
 
@@ -141,6 +169,7 @@ def vista_usuarios_peritos(datos_usuario):
     datos = ServiciosUsuario.obtener_por_id(id_usuario)
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+    ServiciosUsuario.actualizar_ultima_conexion(id_usuario)
 
     usuarios = ServiciosUsuario.obtener_peritos()
 
@@ -158,6 +187,7 @@ def vista_casos(datos_usuario):
     datos = ServiciosUsuario.obtener_por_id(id_usuario)
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+    ServiciosUsuario.actualizar_ultima_conexion(id_usuario)
 
     peritos = ServiciosUsuario.obtener_peritos()
     casos = ServiciosCaso.obtener_todos()
@@ -171,6 +201,7 @@ def vista_caso_id(datos_usuario, id):
     datos = ServiciosUsuario.obtener_por_id(id_usuario)
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+    ServiciosUsuario.actualizar_ultima_conexion(id_usuario)
 
     caso = ServiciosCaso.obtener_por_id(id)
 
@@ -201,6 +232,7 @@ def agregar_caso(datos_usuario):
     datos = ServiciosUsuario.obtener_por_id(id_usuario)
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+    ServiciosUsuario.actualizar_ultima_conexion(id_usuario)
 
     formulario = request.form
 
@@ -224,6 +256,7 @@ def editar_caso(datos_usuario, id):
     datos = ServiciosUsuario.obtener_por_id(id_usuario)
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+    ServiciosUsuario.actualizar_ultima_conexion(id_usuario)
 
     formulario = request.form
 
@@ -248,6 +281,7 @@ def eliminar_caso(datos_usuario, id):
     datos = ServiciosUsuario.obtener_por_id(id_usuario)
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+    ServiciosUsuario.actualizar_ultima_conexion(id_usuario)
 
     caso_eliminado = ServiciosCaso.eliminar(id, id_usuario)
 
@@ -269,6 +303,7 @@ def generar_pdf(datos_usuario, id):
     datos = ServiciosUsuario.obtener_por_id(id_usuario)
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+    ServiciosUsuario.actualizar_ultima_conexion(id_usuario)
 
     #balas_mostrar = ServiciosBala.obtener_todos()
     balas_caso = ServiciosCasquillo.obtener_por_caso(id)
@@ -319,6 +354,7 @@ def vista_casquillos(datos_usuario):
     datos = ServiciosUsuario.obtener_por_id(id_usuario)
     datos['nombre'] = str(datos['nombres']).split(' ')[0]
     datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+    ServiciosUsuario.actualizar_ultima_conexion(id_usuario)
 
     casquillos = ServiciosCasquillo.obtener_todos()
 
