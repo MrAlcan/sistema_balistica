@@ -8,6 +8,18 @@
     href="{{url_for('static', filename='/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
 <link rel="stylesheet"
     href="{{url_for('static', filename='/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
+
+<style>
+    .btn-igual{
+        width: 120px;
+        /*height: 40px;*/
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
 {% endblock %}
 
 {% block titulo_contenido %}
@@ -254,7 +266,7 @@ Casos
     <div class="row">
         <div class="col-12">
 
-            <div class="card">
+            <div class="card watermark-pattern-iitcup">
                 <div class="card-header">
                     <h3 class="card-title">Casos Registrados en el Sistema</h3>
                 </div>
@@ -284,21 +296,21 @@ Casos
                                 <td>{{caso.descripcion}}</td>
                                 <td>{{caso.departamento}}</td>
                                 <td>
-                                    <button class="btn btn-warning btn-sm" data-toggle="modal"
-                                        data-target="#modal-editar-caso-{{caso.id_caso}}">Editar Caso <i
-                                            class="fa fa-edit"></i></button>
+                                    <a href="/perito/casos/ver/{{caso.id_caso}}"><button
+                                            class="btn btn-primary btn-sm btn-igual">Ver Caso <i
+                                                class="fa fa-eye"></i></button></a>
                                     <br />
-                                    <button class="btn btn-success btn-sm" data-toggle="modal"
+                                    <button class="btn btn-success btn-sm btn-igual" data-toggle="modal"
                                         data-target="#modal-agregar-casquillo-{{caso.id_caso}}">Casquillos <i
                                             class="fas fa-monument"></i></button>
                                     <br />
-                                    <a href="/perito/casos/eliminar/{{caso.id_caso}}"><button
-                                            class="btn btn-danger btn-sm">Eliminar Caso <i
-                                                class="fa fa-trash"></i></button></a>
+                                    <button class="btn btn-warning btn-sm btn-igual" data-toggle="modal"
+                                        data-target="#modal-editar-caso-{{caso.id_caso}}">Editar Caso <i
+                                            class="fa fa-edit"></i></button>
                                     <br />
-                                    <a href="/perito/casos/ver/{{caso.id_caso}}"><button
-                                            class="btn btn-primary btn-sm">Ver Caso <i
-                                                class="fa fa-eye"></i></button></a>
+                                    <a href="/perito/casos/eliminar/{{caso.id_caso}}"><button
+                                            class="btn btn-danger btn-sm btn-igual">Eliminar Caso <i
+                                                class="fa fa-trash"></i></button></a>
 
                                 </td>
                             </tr>
@@ -378,9 +390,22 @@ Casos
       pointer-events: none;
       position: absolute; top: 0; left: 0;
       width: 100%; height: 100%;
-      border: 2px dashed rgba(0,0,0,0.5);
-      border-radius: 50%; box-sizing: border-box;
+      border: 2px dashed rgba(0,0,0,1);
+      border-radius: 50%;
+      box-sizing: border-box;
+      box-shadow: 0 0 0 100vmax rgba(255, 255, 255, 0.5);
+      
     }
+    /*.circle-overlay::before{
+        content: "";
+        position: absolute;
+        top: -20px;
+        left: -20px;
+        right: -20px;
+        bottom: -20px;
+        background-color: black;
+        z-index: 1;
+    }*/
   </style>
 
 <!-- LÓGICA JS -->

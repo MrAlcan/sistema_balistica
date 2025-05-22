@@ -16,6 +16,63 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{url_for('static', filename='/dist/css/adminlte.min.css')}}">
     {% block cabecera %}{% endblock %}
+
+    <style>
+        .watermark-iitcup {
+            position: relative;           /* hace de referencia para el ::before */
+            overflow: hidden;             /* recorta la marca si desborda */
+        }
+
+        .watermark-iitcup::before {
+            content: "";
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            /* tu escudo como fondo */
+            background: url("{{ url_for('static', filename='assets/images/logo.png') }}") no-repeat center center;
+            background-size: 70% auto;    /* ocupa el 80% del ancho del contenedor */
+            opacity: 0.2;                 /* visibilidad tenue */
+            width: 100%;                  
+            height: 100%;
+            pointer-events: none;         /* que no interfiera con clicks */
+            z-index: 0;
+        }
+
+            /* Asegura que el contenido quede por encima */
+        .watermark-iitcup > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .watermark-pattern-iitcup {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .watermark-pattern-iitcup::before {
+            content: "";
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%;  /* agranda el área para la rotación */
+            height: 200%;
+            background: url("{{ url_for('static', filename='assets/images/logo.png') }}") repeat;
+            /* tamaño de cada logo pequeño */
+            background-size: 150px 150px;
+            /* rota todo el patrón 45° */
+            transform: rotate(-45deg);
+            opacity: 0.1;   /* muy tenue para no distraer */
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .watermark-pattern-iitcup > * {
+            position: relative;
+            z-index: 1;
+        }
+
+
+    </style>
+
 </head>
 
 <body class="hold-transition sidebar-mini">
