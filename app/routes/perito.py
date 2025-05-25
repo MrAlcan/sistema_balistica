@@ -463,6 +463,52 @@ def generar_pdf(datos_usuario, id):
 
     return response
 
+@perito_bp.route('/descargar/pdf/caso/<id>', methods=['GET'])
+@token_requerido
+def descargar_pdf(datos_usuario, id):
+    id_usuario = datos_usuario['id_usuario']
+    datos = ServiciosUsuario.obtener_por_id(id_usuario)
+    datos['nombre'] = str(datos['nombres']).split(' ')[0]
+    datos['apellido'] = str(datos['apellidos']).split(' ')[0]
+    ServiciosUsuario.actualizar_ultima_conexion(id_usuario)
+
+    #balas_mostrar = ServiciosBala.obtener_todos()
+    balas_caso = ServiciosCasquillo.obtener_por_caso(id)
+    cantidad_indice = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    cont=0
+    print("dato_bala")
+    print("helloda")
+    #print(balas_mostrar)
+    #for bala in balas_mostrar:
+    #    print(bala['id_caso'])
+    #    id_bala_g = int(bala['id_caso'])
+    #    cont = cont + 1
+    #    if id_bala_g==int(id):
+    #        print(bala)
+    #        print(id)
+    #        balas_caso.append(bala)
+
+    #datos_caso = ServiciosCaso.obtener_id(id)
+    datos_caso = ServiciosCaso.obtener_por_id(id)
+    id_experto = datos_caso['id_experto']
+    #datos_experto = ServiciosExperto.obtener_id(id_experto)
+    datos_experto = ServiciosUsuario.obtener_por_id(id_experto)
+    id_usuario_experto = datos_experto['id_usuario']
+    datos_usuario_experto = ServiciosUsuario.obtener_por_id(id_usuario_experto)
+    datos_usuario_solicitante = ServiciosUsuario.obtener_por_id(id_usuario)
+
+    respuesta = ServiciosCaso.generar_horizontal_pdf(datos_usuario_solicitante, datos_usuario_experto, datos_experto, datos_caso, balas_caso)
+    print('-'*50)
+    print('DEBUG')
+    print(respuesta)
+    print(len(respuesta.getvalue()))
+
+    response = make_response(respuesta.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename="CASO_{datos_caso['rup']}_{datos_caso['fecha_creado']}.pdf"'
+
+    return response
+
 
 # ------------------------------------- VSITAS CASQUILLSO 
 
