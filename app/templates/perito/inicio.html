@@ -142,7 +142,7 @@
             </div>
         </div-->
 
-        <div class="row">
+        <!--div class="row">
           <div class="col">
             <div class="card text-center p-5">
               <p><b>Cantidad de Casos Registrados por mes</b></p>
@@ -157,6 +157,18 @@
               <div class="chart">
                   <canvas id="barChart_casquillos_mes" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                 </div>
+            </div>
+          </div>
+        </div-->
+        <div class="row">
+          <div class="col">
+
+            <div class="card text-center p-5">
+              <p><b>Cantidad de Casos y Casquillos Registrados por mes</b></p>
+              <div class="chart">
+                <canvas id="areaChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+              </div>
+  
             </div>
           </div>
         </div>
@@ -201,6 +213,8 @@
 
 <script>
   $(function () {
+
+    var areaChartCanvas = $('#areaChart').get(0).getContext('2d')
 
     //--------------
     //- AREA CHART -
@@ -481,7 +495,7 @@
     //-------------
     //- BAR CHART -
     //-------------
-    var barChartCanvas_casos_mes = $('#barChart_casos_mes').get(0).getContext('2d')
+    /*var barChartCanvas_casos_mes = $('#barChart_casos_mes').get(0).getContext('2d')
     var areaChartData_casos_mes = {
       labels  : ['{{datos_dashboard.casos_nuevos.mes[0]}}', '{{datos_dashboard.casos_nuevos.mes[1]}}', '{{datos_dashboard.casos_nuevos.mes[2]}}', '{{datos_dashboard.casos_nuevos.mes[3]}}', '{{datos_dashboard.casos_nuevos.mes[4]}}', '{{datos_dashboard.casos_nuevos.mes[5]}}'],
       datasets: [
@@ -512,12 +526,12 @@
       type: 'bar',
       data: barChartData_casos_mes,
       options: barChartOptions
-    })
+    })*/
 
     /* ------------------- barchart para casquillos ------------------------*/
 
 
-    var barChartCanvas_casquillos_mes = $('#barChart_casquillos_mes').get(0).getContext('2d')
+    /*var barChartCanvas_casquillos_mes = $('#barChart_casquillos_mes').get(0).getContext('2d')
     var areaChartData_casquillos_mes = {
       labels  : ['{{datos_dashboard.casquillos_nuevos.mes[0]}}', '{{datos_dashboard.casquillos_nuevos.mes[1]}}', '{{datos_dashboard.casquillos_nuevos.mes[2]}}', '{{datos_dashboard.casquillos_nuevos.mes[3]}}', '{{datos_dashboard.casquillos_nuevos.mes[4]}}', '{{datos_dashboard.casquillos_nuevos.mes[5]}}'],
       datasets: [
@@ -548,7 +562,7 @@
       type: 'bar',
       data: barChartData_casquillos_mes,
       options: barChartOptions
-    })
+    })*/
 
     //---------------------
     //- STACKED BAR CHART -
@@ -574,6 +588,80 @@
       data: stackedBarChartData,
       options: stackedBarChartOptions
     })*/
+
+    var areaChartCanvas = $('#areaChart').get(0).getContext('2d');
+    var areaChartData_casos_casquillos = {
+      labels  : ['{{datos_dashboard.casquillos_nuevos.mes[0]}}', '{{datos_dashboard.casquillos_nuevos.mes[1]}}', '{{datos_dashboard.casquillos_nuevos.mes[2]}}', '{{datos_dashboard.casquillos_nuevos.mes[3]}}', '{{datos_dashboard.casquillos_nuevos.mes[4]}}', '{{datos_dashboard.casquillos_nuevos.mes[5]}}'],
+      datasets: [
+        {
+          label               : 'Casos',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [{{datos_dashboard.casos_nuevos.cantidad[0]}}, {{datos_dashboard.casos_nuevos.cantidad[1]}}, {{datos_dashboard.casos_nuevos.cantidad[2]}}, {{datos_dashboard.casos_nuevos.cantidad[3]}}, {{datos_dashboard.casos_nuevos.cantidad[4]}}, {{datos_dashboard.casos_nuevos.cantidad[5]}}]
+        },
+        {
+          label               : 'Casquillos',
+          backgroundColor     : 'rgba(210, 214, 222, 1)',
+          borderColor         : 'rgba(210, 214, 222, 1)',
+          pointRadius         : false,
+          pointColor          : 'rgba(210, 214, 222, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data                : [{{datos_dashboard.casquillos_nuevos.cantidad[0]}}, {{datos_dashboard.casquillos_nuevos.cantidad[1]}}, {{datos_dashboard.casquillos_nuevos.cantidad[2]}}, {{datos_dashboard.casquillos_nuevos.cantidad[3]}}, {{datos_dashboard.casquillos_nuevos.cantidad[4]}}, {{datos_dashboard.casquillos_nuevos.cantidad[5]}}]
+        },
+      ]
+    }
+
+    var areaChartOptions_area_casos_casquillos = {
+      maintainAspectRatio : false,
+      responsive : true,
+      legend: {
+        display: true
+      },
+
+      tooltips: {
+    enabled: true, // <-- Asegúrate de tener esto
+    mode: 'index',
+    intersect: false,
+    callbacks: {
+      label: function(tooltipItem, data) {
+        return tooltipItem.yLabel; // Muestra solo el número
+      }
+    }
+  },
+  hover: {
+    mode: 'nearest',
+    intersect: true
+  },
+
+      scales: {
+        xAxes: [{
+          gridLines : {
+            display : false,
+          }
+        }],
+        yAxes: [{
+          gridLines : {
+            display : false,
+          }
+        }]
+      }
+    }
+
+    new Chart(areaChartCanvas, {
+      type: 'line',
+      data: areaChartData_casos_casquillos,
+      options: areaChartOptions_area_casos_casquillos
+    })
+
+
+
   })
 </script>
 {% endblock %}

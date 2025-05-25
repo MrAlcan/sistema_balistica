@@ -113,7 +113,7 @@ class ServiciosDashboard():
             fecha_final = fecha_final.replace(day=1)
             mes_string_l = fecha_inicio.strftime('%B')
             mes_espanol = DICCIONARIO_MESES[mes_string_l]
-            casos_nuevos = Caso.query.filter(Caso.fecha_creado>=fecha_inicio, Caso.fecha_creado<fecha_final).count()
+            casos_nuevos = Caso.query.filter(Caso.activo==1, Caso.fecha_creado>=fecha_inicio, Caso.fecha_creado<fecha_final).count()
 
             cantidad_casos[contador] = casos_nuevos
             nombre_meses[contador] = mes_espanol
@@ -144,7 +144,7 @@ class ServiciosDashboard():
             fecha_final = fecha_final.replace(day=1)
             mes_string_l = fecha_inicio.strftime('%B')
             mes_espanol = DICCIONARIO_MESES[mes_string_l]
-            casquillos_nuevos = Casquillo.query.filter(Casquillo.fecha_creado>=fecha_inicio, Casquillo.fecha_creado<fecha_final).count()
+            casquillos_nuevos = Casquillo.query.filter(Casquillo.activo==1, Casquillo.fecha_creado>=fecha_inicio, Casquillo.fecha_creado<fecha_final).count()
 
             cantidad_casquillos[contador] = casquillos_nuevos
             nombre_meses[contador] = mes_espanol

@@ -343,61 +343,67 @@ Casos
                             Caso <i class="fa fa-plus"></i></button>
                     </div>
                     <br />
-                    <table id="example1" class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>RUP</th>
-                                <th>Descripción</th>
-                                <th>Departamento</th>
-                                <th>Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% if casos %}
-                            {% for caso in casos %}
-                            <tr>
-                                <td>{{caso.id_caso}}</td>
-                                <td>{{caso.rup}}</td>
-                                <td>{{caso.descripcion}}</td>
-                                <td>{{caso.departamento}}</td>
-                                <td>
-                                    <a href="/perito/casos/ver/{{caso.id_caso}}"><button
-                                            class="btn btn-primary btn-sm btn-igual">Ver Caso <i
-                                                class="fa fa-eye"></i></button></a>
-                                    <br />
-                                    <button class="btn btn-success btn-sm btn-igual" data-toggle="modal"
-                                        data-target="#modal-agregar-casquillo-{{caso.id_caso}}">Casquillos <i
-                                            class="fas fa-monument"></i></button>
-                                    <br />
-                                    <button class="btn btn-warning btn-sm btn-igual" data-toggle="modal"
-                                        data-target="#modal-editar-caso-{{caso.id_caso}}">Editar Caso <i
-                                            class="fa fa-edit"></i></button>
-                                    <!--br />
-                                    <button class="btn btn-danger btn-sm btn-igual" data-toggle="modal"
-                                        data-target="#modal-eliminar-caso-{{caso.id_caso}}">Eliminar Caso <i
-                                            class="fa fa-trash"></i></button-->
 
-                                    <!--a href="/perito/casos/eliminar/{{caso.id_caso}}"><button
-                                            class="btn btn-danger btn-sm btn-igual">Eliminar Caso <i
-                                                class="fa fa-trash"></i></button></a-->
+                    <div class="card p-2">
 
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            {% endif %}
-
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>ID</th>
-                                <th>RUP</th>
-                                <th>Descripción</th>
-                                <th>Departamento</th>
-                                <th>Opciones</th>
-                            </tr>
-                        </tfoot>
-                    </table>
+                        <table id="example1" class="table table-bordered table-striped">
+                            
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>RUP</th>
+                                    <th>Descripción</th>
+                                    <th>Departamento</th>
+                                    <th>Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if casos %}
+                                {% for caso in casos %}
+                                <tr>
+                                    <td>{{caso.id_caso}}</td>
+                                    <td>{{caso.rup}}</td>
+                                    <td>{{caso.descripcion}}</td>
+                                    <td>{{caso.departamento}}</td>
+                                    <td>
+                                        <a href="/perito/casos/ver/{{caso.id_caso}}"><button
+                                                class="btn btn-primary btn-sm btn-igual">Ver Caso <i
+                                                    class="fa fa-eye"></i></button></a>
+                                        <br />
+                                        <button class="btn btn-success btn-sm btn-igual" data-toggle="modal"
+                                            data-target="#modal-agregar-casquillo-{{caso.id_caso}}">Casquillos <i
+                                                class="fas fa-monument"></i></button>
+                                        <br />
+                                        <button class="btn btn-warning btn-sm btn-igual" data-toggle="modal"
+                                            data-target="#modal-editar-caso-{{caso.id_caso}}">Editar Caso <i
+                                                class="fa fa-edit"></i></button>
+                                        <!--br />
+                                        <button class="btn btn-danger btn-sm btn-igual" data-toggle="modal"
+                                            data-target="#modal-eliminar-caso-{{caso.id_caso}}">Eliminar Caso <i
+                                                class="fa fa-trash"></i></button-->
+    
+                                        <!--a href="/perito/casos/eliminar/{{caso.id_caso}}"><button
+                                                class="btn btn-danger btn-sm btn-igual">Eliminar Caso <i
+                                                    class="fa fa-trash"></i></button></a-->
+    
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% endif %}
+    
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>RUP</th>
+                                    <th>Descripción</th>
+                                    <th>Departamento</th>
+                                    <th>Opciones</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    
                 </div>
                 <!-- /.card-body -->
             </div>
