@@ -463,6 +463,8 @@ def generar_pdf(datos_usuario, id):
 
     return response
 
+from datetime import datetime
+
 @perito_bp.route('/descargar/pdf/caso/<id>', methods=['GET'])
 @token_requerido
 def descargar_pdf(datos_usuario, id):
@@ -505,7 +507,9 @@ def descargar_pdf(datos_usuario, id):
 
     response = make_response(respuesta.getvalue())
     response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = f'attachment; filename="CASO_{datos_caso['rup']}_{datos_caso['fecha_creado']}.pdf"'
+    fecha_actual = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+    filename_pdf = f"CASO_{datos_caso['rup']}_{fecha_actual}.pdf"
+    response.headers['Content-Disposition'] = f'attachment; filename={filename_pdf}'
 
     return response
 
