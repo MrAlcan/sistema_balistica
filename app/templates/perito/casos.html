@@ -410,6 +410,36 @@ Casos
         </div>
     </div>
 </div>
+
+<!-- Spinner Overlays -->
+        <div id="overlay1" class="spinner-overlay" hidden="true">
+            <div class="spinner-container-1">
+                <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
+                <p class="mt-3 mb-0">Procesando Casquillos ...</p>
+            </div>
+        </div>
+        
+        <!--div id="overlay2" class="spinner-overlay">
+            <div class="spinner-2"></div>
+        </div>
+        
+        <div id="overlay3" class="spinner-overlay">
+            <div class="spinner-3">
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+            </div>
+        </div>
+        
+        <div id="overlay4" class="spinner-overlay">
+            <div class="spinner-4">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div-->
+    
 {% endblock %}
 
 
@@ -482,7 +512,206 @@ Casos
         background-color: black;
         z-index: 1;
     }*/
+    .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        /* Overlay styles */
+        .spinner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .spinner-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Spinner 1 - Bootstrap Default with Custom Container */
+        .spinner-container-1 {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        /* Spinner 2 - Pulsating Circle */
+        .spinner-2 {
+            width: 80px;
+            height: 80px;
+            background-color: #007bff;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.8);
+                opacity: 0.8;
+            }
+        }
+        
+        /* Spinner 3 - Rotating Squares */
+        .spinner-3 {
+            width: 80px;
+            height: 80px;
+            position: relative;
+        }
+        
+        .spinner-3 .square {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #28a745;
+            animation: rotate-squares 2s infinite ease-in-out;
+        }
+        
+        .spinner-3 .square:nth-child(1) {
+            top: 0;
+            left: 0;
+            animation-delay: 0s;
+        }
+        
+        .spinner-3 .square:nth-child(2) {
+            top: 0;
+            right: 0;
+            animation-delay: 0.5s;
+        }
+        
+        .spinner-3 .square:nth-child(3) {
+            bottom: 0;
+            left: 0;
+            animation-delay: 1.5s;
+        }
+        
+        .spinner-3 .square:nth-child(4) {
+            bottom: 0;
+            right: 0;
+            animation-delay: 1s;
+        }
+        
+        @keyframes rotate-squares {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(180deg);
+            }
+        }
+        
+        /* Spinner 4 - Bouncing Dots */
+        .spinner-4 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            padding: 20px 40px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .spinner-4 .dot {
+            width: 15px;
+            height: 15px;
+            margin: 0 5px;
+            border-radius: 50%;
+            background-color: #dc3545;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        
+        .spinner-4 .dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+        
+        .spinner-4 .dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+        
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
   </style>
+
+<script>
+        // Simulate an async process
+        /*async function simulateProcess() {
+            // Simulate a process that takes 3 seconds
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    resolve('Process completed');
+                }, 3000);
+            });
+        }*/
+        
+        // Function to handle button clicks
+        /*async function handleButtonClick(overlayId) {
+            // Show the spinner overlay
+            document.getElementById(overlayId).classList.add('active');
+            
+            // Disable all buttons
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.disabled = true;
+            });
+            
+            try {
+                // Wait for the process to complete
+                await simulateProcess();
+                
+                // Process completed, hide the spinner
+                document.getElementById(overlayId).classList.remove('active');
+                
+                // Re-enable all buttons
+                buttons.forEach(button => {
+                    button.disabled = false;
+                });
+                
+                console.log('Process completed successfully');
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Hide spinner and re-enable buttons even if there's an error
+                document.getElementById(overlayId).classList.remove('active');
+                buttons.forEach(button => {
+                    button.disabled = false;
+                });
+            }
+        }*/
+        
+        // Add event listeners to buttons
+        /*document.getElementById('btn1').addEventListener('click', () => handleButtonClick('overlay1'));
+        document.getElementById('btn2').addEventListener('click', () => handleButtonClick('overlay2'));
+        document.getElementById('btn3').addEventListener('click', () => handleButtonClick('overlay3'));
+        document.getElementById('btn4').addEventListener('click', () => handleButtonClick('overlay4'));*/
+    </script>
 
 <!-- LÓGICA JS -->
 <script>
@@ -516,6 +745,11 @@ Casos
       document.body.addEventListener('submit', async e => {
         if (!e.target.matches('form')) return;
         e.preventDefault();
+        /* para snipper */
+        const spinner = document.getElementById('overlay1')
+        spinner.hidden = false;
+        spinner.classList.add('active');
+        /* fin snipper */
         const form = e.target;
         const action = form.action;
         console.log(action);
@@ -574,6 +808,9 @@ Casos
         fetch(action, { method, body: payload })
           .then(r => {
             console.log(r);
+            spinner.classList.remove('active');
+            spinner.hidden = true;
+            
             if (r.ok) {
               // Puedes cerrar modal o refrescar
               
@@ -583,7 +820,11 @@ Casos
               alert('Error guardando casquillos');
             }
           })
-          .catch(() => alert('Error de red'));
+          .catch(() => {
+                alert('Error de red');
+                spinner.classList.remove('active');
+                spinner.hidden = true;
+            });
       });
     
       // Inicializa cada bloque para drag/zoom/file-change

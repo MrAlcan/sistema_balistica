@@ -80,10 +80,15 @@ class ProcesarBala():
 
         #-------- BUSCANDO CENTRO CONTORNO --------------------
         momentos = cv2.moments(contornos[0])
+        print('/*-'*50)
+        print('momentos')
+        print(momentos)
     
         # Calcular el centroide (cx, cy) utilizando los momentos
         cx = int(momentos['m10'] / momentos['m00'])
         cy = int(momentos['m01'] / momentos['m00'])
+        print(f'centro salido: {cx}, {cy}')
+        print(f'centro con restas: {cx-40}, {cy-10}')
         cv2.putText(contorno_img, "Centroide", (cx - 40, cy - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255), 2)
         cv2.circle(contorno_img, (cx, cy), 5, (255), -1)  # Dibuja un círculo verde en el centro
         centro = str([cx, cy])

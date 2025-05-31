@@ -5,6 +5,7 @@ separador_datos.py
 app/static/perfil/
 app/static/casos/
 app/controllers/best.pt
+app/controllers/best_original.pt
 image_mask_1.png
 image_mask_2.png
 jajas_1.png
