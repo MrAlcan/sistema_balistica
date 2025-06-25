@@ -140,7 +140,8 @@ class ServiciosCaso():
         estilo_datos = estilos['Normal']
         estilo_datos_adicionales = ParagraphStyle('datos_adicionales', fontSize=8, alignment=0)
 
-        logo_direccion = os.path.join(os.getcwd(),'app', 'static', 'assets', 'images', 'logo.png')
+        #logo_direccion = os.path.join(os.getcwd(),'app', 'static', 'assets', 'images', 'logo.png')
+        logo_direccion = os.path.join('var', 'www', 'sistema_balistica','app', 'static', 'assets', 'images', 'logo.png')
         print(logo_direccion)
 
         imagen_logo = Image(logo_direccion, 1 * inch, 1 * inch)  # Ajustar el tamaño del logo

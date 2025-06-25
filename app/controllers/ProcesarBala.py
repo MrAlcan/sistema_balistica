@@ -8,7 +8,8 @@ import os
 class ProcesarBala():
     def __init__(self):
         self.valor = None
-        ruta_modelo = os.path.join(os.getcwd(), 'app', 'controllers', 'best.pt')
+        #ruta_modelo = os.path.join(os.getcwd(), 'app', 'controllers', 'best.pt')
+        ruta_modelo = os.path.join('var', 'www', 'sistema_balistica', 'app', 'controllers', 'best.pt')
         self.model = YOLO(ruta_modelo)
     
     '''def guardarContornos(self, contornos, ruta_contornos):
