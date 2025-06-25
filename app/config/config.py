@@ -6,8 +6,8 @@ load_dotenv()
 
 class Config:
     JWT_SECRET_KEY = 'clave_secreta_super_segura'
-    UPLOAD_FOLDER_CASOS = 'app/static/casos'
-    UPLOAD_FOLDER_PERFIL = 'app/static/perfil'
+    UPLOAD_FOLDER_CASOS = '/var/www/sistema_balistica/app/static/casos'
+    UPLOAD_FOLDER_PERFIL = '/var/www/sistema_balistica/app/static/perfil'
     SECRET_KEY = 'clave_secreta_super_segura'
     #SQLALCHEMY_DATABASE_URI = 'mysql://root:@localhost/db_balistica'
     SQLALCHEMY_DATABASE_URI = 'mysql://usuario_balistica:contrasena_balistica@localhost/db_balistica'
