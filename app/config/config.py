@@ -9,7 +9,8 @@ class Config:
     UPLOAD_FOLDER_CASOS = 'app/static/casos'
     UPLOAD_FOLDER_PERFIL = 'app/static/perfil'
     SECRET_KEY = 'clave_secreta_super_segura'
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:@localhost/db_balistica'
+    #SQLALCHEMY_DATABASE_URI = 'mysql://root:@localhost/db_balistica'
+    SQLALCHEMY_DATABASE_URI = 'mysql://usuario_balistica:contrasena_balistica@localhost/db_balistica'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAIL_PORT = 465
     MAIL_USE_SSL = True
