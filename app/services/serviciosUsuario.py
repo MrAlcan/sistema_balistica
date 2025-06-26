@@ -7,6 +7,7 @@ from flask_mail import Mail, Message
 from flask import current_app
 from .. import mail
 from datetime import datetime, date, timedelta
+from app.services.templateEmail import generar_email
 import random
 import string
 
@@ -36,6 +37,7 @@ def enviar_credenciales(recipient: str, username: str, password: str) -> None:
         f"Contraseña: {password}\n\n"
         "Saludos."
     )
+    body = generar_email(nombre_usuario=username, username=username, password=password, pagina='https://kipka.sistema-web.com/inicio/ingresar')
     msg = Message(subject=subject, sender=current_app.config['MAIL_USERNAME'], recipients=[recipient])
     msg.body = body
 

@@ -23,7 +23,8 @@ class ServiciosCasquillo():
                         filename = str(casquillo.imagen_original).split('/')[-1]
                         carpeta = str(casquillo.imagen_original).split('/')[-2]
                         carpeta_caso = str(casquillo.imagen_original).split('/')[-3]
-                        ruta_casquillos = os.path.join('app', 'static', 'casos', carpeta_caso, carpeta, filename)
+                        #ruta_casquillos = os.path.join('app', 'static', 'casos', carpeta_caso, carpeta, filename)
+                        ruta_casquillos = os.path.join('var','www', 'sistema_balistica', 'app', 'static', 'casos', carpeta_caso, carpeta, filename)
                         print(ruta_casquillos)
                         os.remove(ruta_casquillos)
                 db.session.commit()
