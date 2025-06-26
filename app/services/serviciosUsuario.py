@@ -7,7 +7,7 @@ from flask_mail import Mail, Message
 from flask import current_app
 from .. import mail
 from datetime import datetime, date, timedelta
-from app.services.templateEmail import generar_email
+from app.services.templateEmail import generar_email, generar_email_codigo
 import random
 import string
 
@@ -37,9 +37,10 @@ def enviar_credenciales(recipient: str, username: str, password: str) -> None:
         f"Contraseña: {password}\n\n"
         "Saludos."
     )
-    body = generar_email(nombre_usuario=username, username=username, password=password, pagina='https://kipka.sistema-web.com/inicio/ingresar')
+    body_html = generar_email(nombre_usuario=username, username=username, password=password, pagina='https://kipka.sistema-web.com/inicio/ingresar')
     msg = Message(subject=subject, sender=current_app.config['MAIL_USERNAME'], recipients=[recipient])
     msg.body = body
+    msg.html = body_html
 
     mail.send(msg)
 
@@ -53,7 +54,9 @@ def enviar_codigo_numerico(recipient: str, code: int) -> None:
         "No compartas este código con nadie."
     )
     msg = Message(subject=subject, sender=current_app.config['MAIL_USERNAME'], recipients=[recipient])
+    body_html = generar_email_codigo(codigo_verificacion=code)
     msg.body = body
+    msg.html = body_html
 
     mail.send(msg)
 

@@ -222,7 +222,7 @@
                       <h3>Controles Globales</h3>
                       <div class="d-flex flex-row justify-content-between">
                         <div id="composite-container" class="mr-5"></div>
-                        <div id="contenedor-estadisticas" class="mx-5 pr-5 mt-5 pt-3"></div>
+                        <div id="contenedor-estadisticas" class="mx-5 pr-5 mt-5 pt-3 p-2 card"></div>
                       </div>
                       
                       <div id="composite-controls">
@@ -545,6 +545,8 @@
 
         const contenedorTableComparaciones = document.createElement('div');
         contenedorTableComparaciones.classList.add('table-responsive')
+        contenedorTableComparaciones.classList.add('card')
+        contenedorTableComparaciones.classList.add('p-2')
 
         const tableComparaciones = document.createElement('table');
         tableComparaciones.classList.add('table');
