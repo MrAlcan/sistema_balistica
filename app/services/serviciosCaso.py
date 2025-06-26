@@ -225,7 +225,8 @@ class ServiciosCaso():
                 centro_1 = str(bala['centro_contorno'])[1:-1]
                 centro_1_x = int(centro_1.split(', ')[0])
                 centro_1_y = int(centro_1.split(', ')[1])
-                direccion_1 = "app/static"+str(bala['csv'])
+                #direccion_1 = "app/static"+str(bala['csv'])
+                direccion_1 = "/var/www/sistema_balistica/app/static"+str(bala['csv'])
                 comparaciones_str = 'Comparacion Similituds \n Angulo Casquillo Actual: '+ str(ang_1)
                 for bala_c in balas:
                     
@@ -238,8 +239,10 @@ class ServiciosCaso():
                         fila_tipos = [Paragraph(f"<b>{bala['tipo']}</b>", estilo_tabla_paragrah),Paragraph(f"<b>{bala_c['tipo']}</b>", estilo_tabla_paragrah)]
                         tabla_balistica.append(fila_tipos)
 
-                        direccion_imagen_procesada = "app/static"+str(bala['imagen_procesada'])#os.path.join(os.getcwd(), str(bala['imagen_procesada']))
-                        direccion_imagen_procesada_c = "app/static"+str(bala_c['imagen_procesada'])#os.path.join(os.getcwd(), str(bala_c['imagen_procesada']))
+                        #direccion_imagen_procesada = "app/static"+str(bala['imagen_procesada'])#os.path.join(os.getcwd(), str(bala['imagen_procesada']))
+                        #direccion_imagen_procesada_c = "app/static"+str(bala_c['imagen_procesada'])#os.path.join(os.getcwd(), str(bala_c['imagen_procesada']))
+                        direccion_imagen_procesada = "/var/www/sistema_balistica/app/static"+str(bala['imagen_procesada'])#os.path.join(os.getcwd(), str(bala['imagen_procesada']))
+                        direccion_imagen_procesada_c = "/var/www/sistema_balistica/app/static"+str(bala_c['imagen_procesada'])#os.path.join(os.getcwd(), str(bala_c['imagen_procesada']))
 
                         imagen_procesada = Image(direccion_imagen_procesada, 3.5 * inch, 3.5* inch)
                         imagen_procesada_c = Image(direccion_imagen_procesada_c, 3.5 * inch, 3.5* inch)
@@ -251,7 +254,8 @@ class ServiciosCaso():
                         centro_2 = str(bala_c['centro_contorno'])[1:-1]
                         centro_2_x = int(centro_2.split(', ')[0])
                         centro_2_y = int(centro_2.split(', ')[1])
-                        direccion_2 = "app/static"+str(bala_c['csv'])
+                        #direccion_2 = "app/static"+str(bala_c['csv'])
+                        direccion_2 = "/var/www/sistema_balistica/app/static"+str(bala_c['csv'])
                         similitud, pixeles_iguales, total_pixeles, centro, centro_c_1, centro_c_2, diferencia_centros, porcentaje_dif = obj_bala.obtener_similitud(direccion_1, direccion_2, ang_1, ang_2)
 
                         tabla_balistica.append([Paragraph(f"<b>Similitud de Forma: </b>{str(similitud).split('.')[0]}.{str(similitud).split('.')[1][0:2]} %<br /><b>Similitud Basada en los Centros de los Golpes: </b>{str(porcentaje_dif)}", estilo_tabla_paragrah),''])
